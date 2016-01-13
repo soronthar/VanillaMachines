@@ -1,6 +1,8 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -34,7 +36,7 @@ class PoweredConstruct implements Construct {
 
     @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
-            return this.engine.canMove(world, rails.facing, step) && this.rails.canMove(world, rails.facing, step);
+        return this.engine.canMove(world, rails.facing, step) && this.rails.canMove(world, rails.facing, step);
     }
 
     @Override
@@ -43,16 +45,30 @@ class PoweredConstruct implements Construct {
                 && rails.isValidStructure(world);
     }
 
-    
-
     private BlockPos moveBlock(World world, BlockPos pos, int step) {
+        BlockPos newPos = pos.offset(rails.facing, step);
         IBlockState state = world.getBlockState(pos);
+        doWeirdLeverFix(world, newPos, state);
+
         world.setBlockToAir(pos);
         world.markBlockForUpdate(pos);
-        BlockPos newPos = pos.offset(rails.facing, step);
+
         world.setBlockState(newPos, state);
         world.markBlockForUpdate(newPos);
         return newPos;
+    }
+
+    /**
+     * If the lever is placed above grass, it will be destroyed as soon as it is placed.
+     * Prevent this by setting the space to air if possible.
+     */
+    private void doWeirdLeverFix(World world, BlockPos pos, IBlockState state) {
+        if (state.getBlock().equals(Blocks.lever)
+                && !GeneralUtils.isBlockInPos(world, pos.offset(EnumFacing.DOWN), Blocks.air)
+                && GeneralUtils.canBlockBeReplaced(world, pos.offset(EnumFacing.DOWN))) {
+            world.setBlockToAir(pos.offset(EnumFacing.DOWN));
+            world.setBlockToAir(pos);
+        }
     }
 
     @Override

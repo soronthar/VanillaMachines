@@ -1,6 +1,8 @@
 package com.soronthar.mc.vanillamod.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFlower;
+import net.minecraft.block.BlockMushroom;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTBase;
@@ -43,6 +45,10 @@ public class GeneralUtils {
     }
 
     public static boolean canBlockBeReplaced(World world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+        Block block = world.getBlockState(pos).getBlock();
+        return block.isReplaceable(world, pos)
+                || block.equals(Blocks.brown_mushroom)
+                || block.equals(Blocks.red_mushroom)
+                || block instanceof BlockFlower;
     }
 }

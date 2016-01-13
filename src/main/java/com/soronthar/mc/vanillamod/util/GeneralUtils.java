@@ -1,6 +1,7 @@
 package com.soronthar.mc.vanillamod.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockMushroom;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,22 +34,24 @@ public class GeneralUtils {
 
     public static void writeBlockPosToNBT(NBTTagCompound compound, String key, BlockPos pos) {
         NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setInteger("x",pos.getX());
-        tagCompound.setInteger("y",pos.getY());
-        tagCompound.setInteger("z",pos.getZ());
+        tagCompound.setInteger("x", pos.getX());
+        tagCompound.setInteger("y", pos.getY());
+        tagCompound.setInteger("z", pos.getZ());
         compound.setTag(key, compound);
     }
 
     public static BlockPos readBlockPosFromNBT(NBTTagCompound compound, String key) {
         NBTTagCompound tag = compound.getCompoundTag(key);
-        return new BlockPos(tag.getInteger("x"),tag.getInteger("y"),tag.getInteger("z"));
+        return new BlockPos(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"));
     }
 
     public static boolean canBlockBeReplaced(World world, BlockPos pos) {
         Block block = world.getBlockState(pos).getBlock();
         return block.isReplaceable(world, pos)
                 || block.equals(Blocks.brown_mushroom)
-                || block.equals(Blocks.red_mushroom)
+                || block.equals(Blocks.brown_mushroom)
+                || block.equals(Blocks.deadbush)
+                || block instanceof BlockDoublePlant
                 || block instanceof BlockFlower;
     }
 }

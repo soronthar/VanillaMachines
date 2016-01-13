@@ -42,9 +42,11 @@ class RailsModule implements Construct{
     public boolean canMove(World world, EnumFacing facing, int step) {
         boolean canMove=true;
         for (BlockPos rail : rails) {
+            BlockPos newPos = rail.offset(facing, step);
             canMove = canMove
-                    && (GeneralUtils.canBlockBeReplaced(world, rail.offset(facing, step))
-                        || GeneralUtils.isBlockInPos(world, rail.offset(facing, step), getRailsBlock()));
+                    && (GeneralUtils.canBlockBeReplaced(world, newPos)
+                        || GeneralUtils.isBlockInPos(world, newPos, getRailsBlock()))
+                    && world.getBlockState(newPos.offset(EnumFacing.DOWN)).getBlock().isBlockSolid(world, newPos.offset(EnumFacing.DOWN), EnumFacing.UP);
         }
         return canMove;
     }

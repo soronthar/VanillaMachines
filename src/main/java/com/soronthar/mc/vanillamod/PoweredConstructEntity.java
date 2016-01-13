@@ -18,7 +18,7 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
     @Override
     public void update() {
         this.tick++;
-        if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct!=null && this.tick%40==0) {
+        if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct!=null && this.tick%20==0) {
             BlockPos leverPos = poweredConstruct.engine.activatorPos;
 
             if (poweredConstruct.isValidStructure(getWorld())) {

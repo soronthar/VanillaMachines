@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 class EngineModule implements Construct{
@@ -28,7 +29,12 @@ class EngineModule implements Construct{
                 && GeneralUtils.isBlockInPos(world,this.controllerPos,getControllerBlock());
     }
 
-
+    @Override
+    public boolean canMove(World world, EnumFacing facing, int step) {
+        return GeneralUtils.canBlockBeReplaced(world,this.propellerPos.offset(facing,step))
+                && GeneralUtils.canBlockBeReplaced(world, this.activatorPos.offset(facing, step))
+                && GeneralUtils.canBlockBeReplaced(world,this.controllerPos.offset(facing,step));
+    }
 
     public void readFromNBT(NBTTagCompound compound) {
         NBTTagCompound tag = compound.getCompoundTag("engineModule");

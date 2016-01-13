@@ -38,12 +38,23 @@ class RailsModule implements Construct{
         compound.setTag("railsModule",tag);
     }
 
+    @Override
+    public boolean canMove(World world, EnumFacing facing, int step) {
+        boolean canMove=true;
+        for (BlockPos rail : rails) {
+            canMove = canMove
+                    && (GeneralUtils.canBlockBeReplaced(world, rail.offset(facing, step))
+                        || GeneralUtils.isBlockInPos(world, rail.offset(facing, step), getRailsBlock()));
+        }
+        return canMove;
+    }
+
 
     @Override
     public boolean isValidStructure(World world) {
         boolean valid=true;
         for (BlockPos rail : rails) {
-            valid = valid && world.getBlockState(rail).getBlock().equals(getRailsBlock());
+            valid = valid && GeneralUtils.isBlockInPos(world, rail, getRailsBlock());
         }
         return valid;
     }

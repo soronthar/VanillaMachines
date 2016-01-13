@@ -2,6 +2,7 @@ package com.soronthar.mc.vanillamod.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
@@ -39,5 +40,9 @@ public class GeneralUtils {
     public static BlockPos readBlockPosFromNBT(NBTTagCompound compound, String key) {
         NBTTagCompound tag = compound.getCompoundTag(key);
         return new BlockPos(tag.getInteger("x"),tag.getInteger("y"),tag.getInteger("z"));
+    }
+
+    public static boolean canBlockBeReplaced(World world, BlockPos pos) {
+        return world.getBlockState(pos).getBlock().isReplaceable(world, pos);
     }
 }

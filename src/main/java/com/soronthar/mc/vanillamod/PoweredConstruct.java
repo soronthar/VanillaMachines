@@ -3,6 +3,7 @@ package com.soronthar.mc.vanillamod;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 
@@ -20,7 +21,7 @@ class PoweredConstruct implements Construct {
 
 
     public void move(World world, int step) {
-        if (this.isValidStructure(world)) {
+        if (this.isValidStructure(world) && this.canMove(world, rails.facing, step)) {
             engine.activatorPos = moveBlock(world, engine.activatorPos, step);
             engine.controllerPos = moveBlock(world, engine.controllerPos, step);
             engine.propellerPos = moveBlock(world, engine.propellerPos, step);
@@ -32,10 +33,17 @@ class PoweredConstruct implements Construct {
     }
 
     @Override
+    public boolean canMove(World world, EnumFacing facing, int step) {
+            return this.engine.canMove(world, rails.facing, step) && this.rails.canMove(world, rails.facing, step);
+    }
+
+    @Override
     public boolean isValidStructure(World world) {
         return engine.isValidStructure(world)
                 && rails.isValidStructure(world);
     }
+
+    
 
     private BlockPos moveBlock(World world, BlockPos pos, int step) {
         IBlockState state = world.getBlockState(pos);

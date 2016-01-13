@@ -1,6 +1,7 @@
 package com.soronthar.mc.vanillamod;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public interface Construct {
@@ -9,4 +10,6 @@ public interface Construct {
     void readFromNBT(NBTTagCompound compound);
 
     void writeToNBT(NBTTagCompound compound);
+
+    boolean canMove(World world, EnumFacing facing, int step);
 }

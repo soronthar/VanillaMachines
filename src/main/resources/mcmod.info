@@ -1,0 +1,16 @@
+[
+{
+  "modid": "vanillamod",
+  "name": "Vanilla Mod",
+  "description": "Do stuff",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["Soronthar"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

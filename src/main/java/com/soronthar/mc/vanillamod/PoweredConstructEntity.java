@@ -1,5 +1,7 @@
 package com.soronthar.mc.vanillamod;
 
+import net.minecraft.block.BlockLever;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -44,6 +46,9 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
         System.out.println("Powering down @ " + this.pos + " - " + this);
         poweredConstruct.engine.powerOff(getWorld());
         getWorld().removeTileEntity(leverPos);
+        IBlockState blockState = getWorld().getBlockState(leverPos);
+        getWorld().setBlockState(leverPos, blockState.withProperty(BlockLever.POWERED,false));
+        getWorld().markBlockForUpdate(leverPos);
         this.invalidate();
     }
 

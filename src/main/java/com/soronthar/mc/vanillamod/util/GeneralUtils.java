@@ -46,6 +46,7 @@ public class GeneralUtils {
     }
 
     public static boolean canBlockBeReplaced(World world, BlockPos pos) {
+        if (!world.isAreaLoaded(pos,1)) return false;
         Block block = world.getBlockState(pos).getBlock();
         return block.isReplaceable(world, pos)
                 || block.equals(Blocks.brown_mushroom)

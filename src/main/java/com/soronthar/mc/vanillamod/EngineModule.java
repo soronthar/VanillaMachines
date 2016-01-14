@@ -57,11 +57,25 @@ class EngineModule implements Construct {
 
     @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
-        return GeneralUtils.canBlockBeReplaced(world, this.propellerPos.offset(facing, step))
+        return  GeneralUtils.canBlockBeReplaced(world, this.propellerPos.offset(facing, step))
                 && GeneralUtils.canBlockBeReplaced(world, this.activatorPos.offset(facing, step))
                 && GeneralUtils.canBlockBeReplaced(world, this.controllerPos.offset(facing, step));
     }
 
+
+    public void powerOn(World world) {
+        if (world.getBlockState(this.propellerPos)!=null) {
+            BlockFurnace.setState(true, world, this.propellerPos);
+        }
+    }
+
+    public void powerOff(World world) {
+        if (world.getBlockState(this.propellerPos)!=null) {
+            BlockFurnace.setState(false, world, this.propellerPos);
+        }
+    }
+
+    
     public void readFromNBT(NBTTagCompound compound) {
         NBTTagCompound tag = compound.getCompoundTag("engineModule");
         this.activatorPos = GeneralUtils.readBlockPosFromNBT(tag, "activatorPos");
@@ -76,7 +90,6 @@ class EngineModule implements Construct {
         GeneralUtils.writeBlockPosToNBT(tagCompound, "propellerPos", propellerPos);
         compound.setTag("engineModule", tagCompound);
     }
-
 
     public static Block getActivatorBlock() {
         return Blocks.lever;
@@ -95,11 +108,5 @@ class EngineModule implements Construct {
     }
 
 
-    public void powerOn(World world) {
-        BlockFurnace.setState(true, world, this.propellerPos);
-    }
 
-    public void powerOff(World world) {
-        BlockFurnace.setState(false, world, this.propellerPos);
-    }
 }

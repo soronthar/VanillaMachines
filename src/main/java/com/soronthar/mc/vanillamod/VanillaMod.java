@@ -4,7 +4,6 @@ import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -87,12 +86,12 @@ public class VanillaMod {
             EnumFacing facing = values[i1];
             rails[0] = propellerPos.offset(facing);
             rails[1] = propellerPos.offset(facing.getOpposite());
-            if (GeneralUtils.isBlockInPos(world, rails[0], Blocks.planks) &&
-                    GeneralUtils.isBlockInPos(world, rails[1], Blocks.planks)) {
+            if (GeneralUtils.isBlockInPos(world, rails[0], RailsModule.getRailsBlock()) &&
+                    GeneralUtils.isBlockInPos(world, rails[1], RailsModule.getRailsBlock())) {
                 EnumFacing[] t = {facing.rotateY(), facing.rotateYCCW()};
                 for (int i = 0, tLength = t.length; i < tLength && railsModule == null; i++) {
                     EnumFacing enumFacing = t[i];
-                    if (GeneralUtils.isBlockInPos(world, rails[0].offset(enumFacing), Blocks.planks) &&
+                    if (GeneralUtils.isBlockInPos(world, rails[0].offset(enumFacing), RailsModule.getRailsBlock()) &&
                             GeneralUtils.isBlockInPos(world, rails[1].offset(enumFacing), RailsModule.getRailsBlock())) {
                         rails[2] = rails[0].offset(enumFacing);
                         rails[3] = rails[1].offset(enumFacing);
@@ -112,7 +111,7 @@ public class VanillaMod {
         if (controllerFacing != null) {
             BlockPos controllerPos = activatorPos.offset(controllerFacing);
             BlockPos propellerPos = controllerPos.down();
-            if (GeneralUtils.isBlockInPos(world, propellerPos, EngineModule.getPropellerBlock())) {
+            if (GeneralUtils.isBlockInPos(world, propellerPos, EngineModule.getPropellerBlockOff())) {
                 engine=new EngineModule(activatorPos, controllerPos, propellerPos);
             }
         }

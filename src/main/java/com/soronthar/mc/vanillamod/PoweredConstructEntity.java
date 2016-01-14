@@ -6,6 +6,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 
+//TODOÑ chunk borders... stop if chunk is not loaded.
+//TODO: When the world is closed, the furnace keeps "burning"
+//TODO: Persist the entity..somehow.
 public class PoweredConstructEntity extends TileEntity implements ITickable {
 
     PoweredConstruct poweredConstruct;
@@ -20,7 +23,6 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
         this.tick++;
         if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct!=null && this.tick%20==0) {
             BlockPos leverPos = poweredConstruct.engine.activatorPos;
-
             if (poweredConstruct.isValidStructure(getWorld())) {
                 if(Blocks.lever.equals(worldObj.getBlockState(leverPos).getBlock())) {
                     if (!getWorld().isBlockPowered(leverPos)) {
@@ -30,7 +32,6 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
                         getWorld().removeTileEntity(leverPos);
                         poweredConstruct.move(getWorld(), 1);
                         getWorld().setTileEntity(poweredConstruct.engine.activatorPos,this);
-
                     }
                 }
             } else {
@@ -65,4 +66,6 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
         super.finalize();
         System.out.println("Collecting " + this);
     }
+
+
 }

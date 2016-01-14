@@ -3,7 +3,10 @@ package com.soronthar.mc.vanillamod;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -31,6 +34,7 @@ class PoweredConstruct implements Construct {
             rails.rails[1] = moveBlock(world, rails.rails[1], step);
             rails.rails[2] = moveBlock(world, rails.rails[2], step);
             rails.rails[3] = moveBlock(world, rails.rails[3], step);
+            engine.burnFuel(world);
         }
     }
 
@@ -48,6 +52,16 @@ class PoweredConstruct implements Construct {
     private BlockPos moveBlock(World world, BlockPos pos, int step) {
         BlockPos newPos = pos.offset(rails.facing, step);
         IBlockState state = world.getBlockState(pos);
+        TileEntity tileEntity = world.getTileEntity(pos);
+        ItemStack[] stackInSlot=null;
+        if (tileEntity!=null && tileEntity instanceof IInventory) {
+            world.removeTileEntity(pos);
+            IInventory inventory = (IInventory) tileEntity;
+            stackInSlot=new ItemStack[inventory.getSizeInventory()];
+            for (int i = 0; i < stackInSlot.length; i++) {
+                stackInSlot[i]=inventory.getStackInSlot(i);
+            }
+        }
         doWeirdLeverFix(world, newPos, state);
 
         world.setBlockToAir(pos);
@@ -55,6 +69,14 @@ class PoweredConstruct implements Construct {
 
         world.setBlockState(newPos, state);
         world.markBlockForUpdate(newPos);
+
+        if (stackInSlot!=null) {
+            IInventory entity = (IInventory)world.getTileEntity(newPos);
+            for (int i = 0; i < stackInSlot.length; i++) {
+                entity.setInventorySlotContents(i,stackInSlot[i]);
+            }
+        }
+
         return newPos;
     }
 

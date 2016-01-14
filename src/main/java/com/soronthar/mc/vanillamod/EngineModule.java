@@ -4,7 +4,10 @@ import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -14,6 +17,8 @@ class EngineModule implements Construct {
     BlockPos controllerPos;
     BlockPos propellerPos;
 
+    int burnTimeLeft=0;
+
     public EngineModule() {
     }
 
@@ -21,6 +26,23 @@ class EngineModule implements Construct {
         this.activatorPos = activatorPos;
         this.controllerPos = controllerPos;
         this.propellerPos = propellerPos;
+    }
+
+    public void burnFuel(World world) {
+        if (burnTimeLeft>0) {
+            burnTimeLeft--;
+        }
+
+        if (burnTimeLeft==0) {
+            TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
+            if (furnace!=null
+            && furnace.getStackInSlot(1) != null
+                    && furnace.getStackInSlot(1).stackSize>0
+                    ) {
+                ItemStack itemStack = furnace.decrStackSize(1, 1);
+                burnTimeLeft+=TileEntityFurnace.getItemBurnTime(itemStack);
+            }
+        }
     }
 
     @Override
@@ -64,7 +86,7 @@ class EngineModule implements Construct {
         return Blocks.furnace;
     }
 
-    private Block getPropellerBlockOn() {
+    public static Block getPropellerBlockOn() {
         return Blocks.lit_furnace;
     }
 

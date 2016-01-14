@@ -32,8 +32,12 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
                     } else {
                         poweredConstruct.engine.powerOn(getWorld());
                         getWorld().removeTileEntity(leverPos);
-                        poweredConstruct.move(getWorld(), 1);
-                        getWorld().setTileEntity(poweredConstruct.engine.activatorPos,this);
+                        boolean isMoving=poweredConstruct.move(getWorld(), 1);
+                        if (isMoving) {
+                            getWorld().setTileEntity(poweredConstruct.engine.activatorPos,this);
+                        } else {
+                            powerOff(leverPos);
+                        }
                     }
                 }
             } else {
@@ -43,7 +47,6 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
     }
 
     private void powerOff(BlockPos leverPos) {
-        System.out.println("Powering down @ " + this.pos + " - " + this);
         poweredConstruct.engine.powerOff(getWorld());
         getWorld().removeTileEntity(leverPos);
         IBlockState blockState = getWorld().getBlockState(leverPos);

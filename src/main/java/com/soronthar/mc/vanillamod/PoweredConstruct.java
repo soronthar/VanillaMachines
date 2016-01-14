@@ -25,7 +25,7 @@ class PoweredConstruct implements Construct {
     }
 
 
-    public void move(World world, int step) {
+    public boolean move(World world, int step) {
         if (this.isValidStructure(world) && this.canMove(world, rails.facing, step)) {
             engine.activatorPos = moveBlock(world, engine.activatorPos, step);
             engine.controllerPos = moveBlock(world, engine.controllerPos, step);
@@ -35,6 +35,9 @@ class PoweredConstruct implements Construct {
             rails.rails[2] = moveBlock(world, rails.rails[2], step);
             rails.rails[3] = moveBlock(world, rails.rails[3], step);
             engine.burnFuel(world);
+            return true;
+        } else {
+            return false;
         }
     }
 

@@ -12,4 +12,6 @@ public interface Construct {
     void writeToNBT(NBTTagCompound compound);
 
     boolean canMove(World world, EnumFacing facing, int step);
+
+    void powerOff(World world);
 }

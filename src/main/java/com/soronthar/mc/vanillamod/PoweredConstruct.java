@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -49,6 +50,13 @@ class PoweredConstruct implements Construct {
 
         }
         return construct;
+    }
+
+    public void powerOff(World world) {
+        engine.powerOff(world);
+        for (Construct construct : constructs) {
+            construct.powerOff(world);
+        }
     }
 
 

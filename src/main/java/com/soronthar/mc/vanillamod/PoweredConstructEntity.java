@@ -11,6 +11,7 @@ import net.minecraft.util.ITickable;
 //TODOÑ chunk borders... stop if chunk is not loaded.
 //TODO: When the world is closed, the furnace keeps "burning"
 //TODO: Persist the entity..somehow.
+//TODO: the construct should have a reference to the world.
 public class PoweredConstructEntity extends TileEntity implements ITickable {
 
     PoweredConstruct poweredConstruct;
@@ -47,7 +48,7 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
     }
 
     private void powerOff(BlockPos leverPos) {
-        poweredConstruct.engine.powerOff(getWorld());
+        poweredConstruct.powerOff(getWorld());
         getWorld().removeTileEntity(leverPos);
         IBlockState blockState = getWorld().getBlockState(leverPos);
         getWorld().setBlockState(leverPos, blockState.withProperty(BlockLever.POWERED,false));

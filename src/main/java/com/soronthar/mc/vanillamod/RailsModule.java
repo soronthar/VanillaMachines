@@ -55,6 +55,11 @@ class RailsModule implements Construct{
         return railsModule;
     }
 
+
+    @Override
+    public void powerOff(World world) {
+    }
+
     public void readFromNBT(NBTTagCompound compound) {
         NBTTagCompound tag = compound.getCompoundTag("railsModule");
         this.facing=EnumFacing.getFront(tag.getInteger("railsFacing"));

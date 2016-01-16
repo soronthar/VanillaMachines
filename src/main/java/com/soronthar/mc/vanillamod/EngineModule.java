@@ -3,6 +3,7 @@ package com.soronthar.mc.vanillamod;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,7 +36,7 @@ class EngineModule implements Construct {
         if (controllerFacing != null) {
             BlockPos controllerPos = activatorPos.offset(controllerFacing);
             BlockPos propellerPos = controllerPos.down();
-            if (GeneralUtils.isBlockInPos(world, propellerPos, getPropellerBlockOff())) {
+            if (isPropellerBlock(world.getBlockState(propellerPos))) {
                 engine=new EngineModule(activatorPos, controllerPos, propellerPos);
             }
         }
@@ -61,12 +62,11 @@ class EngineModule implements Construct {
 
     @Override
     public boolean isValidStructure(World world) {
-        return (GeneralUtils.isBlockInPos(world, this.propellerPos, getPropellerBlockOff())
-                || GeneralUtils.isBlockInPos(world, this.propellerPos, getPropellerBlockOn()))
-                && GeneralUtils.isBlockInPos(world, this.activatorPos, getActivatorBlock())
-                && GeneralUtils.isBlockInPos(world, this.controllerPos, getControllerBlock())
-                ;
+        return (isPropellerBlock(world.getBlockState(this.propellerPos))
+                && isActivatorBlock(world.getBlockState(this.activatorPos))
+                && isControllerBlock(world.getBlockState(this.controllerPos)));
     }
+
 
 
     @Override
@@ -95,7 +95,7 @@ class EngineModule implements Construct {
         this.activatorPos = GeneralUtils.readBlockPosFromNBT(tag, "activatorPos");
         this.controllerPos = GeneralUtils.readBlockPosFromNBT(tag, "controllerPos");
         this.propellerPos = GeneralUtils.readBlockPosFromNBT(tag, "propellerPos");
-        this.burnTimeLeft = tag.getInteger("engineModule");
+        this.burnTimeLeft = tag.getInteger("burnTimeLeft");
     }
 
     public void writeToNBT(NBTTagCompound compound) {
@@ -123,6 +123,19 @@ class EngineModule implements Construct {
         return Blocks.noteblock;
     }
 
+
+    public static boolean isActivatorBlock(IBlockState blockState) {
+        return blockState != null && getActivatorBlock().equals(blockState.getBlock());
+    }
+
+    public static boolean isPropellerBlock(IBlockState blockState) {
+        Block block = blockState.getBlock();
+        return getPropellerBlockOff().equals(block) || getPropellerBlockOn().equals(block);
+    }
+
+    private boolean isControllerBlock(IBlockState blockState) {
+        return blockState!=null && getControllerBlock().equals(blockState.getBlock());
+    }
 
 
 }

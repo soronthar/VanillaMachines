@@ -11,28 +11,40 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 class PoweredConstruct implements Construct {
     EngineModule engine;
-    RailsModule rails;
+    private RailsModule rails;
+    List<Construct> constructs=new ArrayList<Construct>();
 
     public PoweredConstruct() {
     }
 
-    public PoweredConstruct(EngineModule engine, RailsModule rails) {
+    public PoweredConstruct(EngineModule engine) {
         this.engine = engine;
-        this.rails = rails;
+    }
+
+    public void addRails(RailsModule rails) {
+        this.constructs.add(rails);
+    }
+
+    public RailsModule getRails() {
+        return (RailsModule) constructs.get(0);
     }
 
     public static PoweredConstruct detectPoweredConstruct(World world, BlockPos activatorPos) {
         PoweredConstruct construct = null;
         EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
         if (engine!=null) {
+            construct = new PoweredConstruct(engine);
             BlockPos propellerPos = engine.propellerPos;
             RailsModule railsModule = RailsModule.detectRailModule(world, propellerPos);
 
             if (railsModule != null) {
-                construct = new PoweredConstruct(engine,railsModule);
+                construct.addRails(railsModule);
             }
 
         }
@@ -41,14 +53,15 @@ class PoweredConstruct implements Construct {
 
 
     public boolean move(World world, int step) {
-        if (this.isValidStructure(world) && this.canMove(world, rails.facing, step)) {
-            engine.activatorPos = moveBlock(world, engine.activatorPos, step);
-            engine.controllerPos = moveBlock(world, engine.controllerPos, step);
-            engine.propellerPos = moveBlock(world, engine.propellerPos, step);
-            rails.rails[0] = moveBlock(world, rails.rails[0], step);
-            rails.rails[1] = moveBlock(world, rails.rails[1], step);
-            rails.rails[2] = moveBlock(world, rails.rails[2], step);
-            rails.rails[3] = moveBlock(world, rails.rails[3], step);
+        EnumFacing facing=getRails().facing;
+        if (this.isValidStructure(world) && this.canMove(world, facing, step)) {
+            engine.activatorPos = moveBlock(world, engine.activatorPos, facing, step);
+            engine.controllerPos = moveBlock(world, engine.controllerPos, facing, step);
+            engine.propellerPos = moveBlock(world, engine.propellerPos, facing, step);
+            getRails().rails[0] = moveBlock(world, getRails().rails[0], facing, step);
+            getRails().rails[1] = moveBlock(world, getRails().rails[1], facing, step);
+            getRails().rails[2] = moveBlock(world, getRails().rails[2], facing, step);
+            getRails().rails[3] = moveBlock(world, getRails().rails[3], facing, step);
             engine.burnFuel(world);
             return true;
         } else {
@@ -58,17 +71,17 @@ class PoweredConstruct implements Construct {
 
     @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
-        return this.engine.canMove(world, rails.facing, step) && this.rails.canMove(world, rails.facing, step);
+        return this.engine.canMove(world, getRails().facing, step) && this.getRails().canMove(world, getRails().facing, step);
     }
 
     @Override
     public boolean isValidStructure(World world) {
         return engine.isValidStructure(world)
-                && rails.isValidStructure(world);
+                && getRails().isValidStructure(world);
     }
 
-    private BlockPos moveBlock(World world, BlockPos pos, int step) {
-        BlockPos newPos = pos.offset(rails.facing, step);
+    public static BlockPos moveBlock(World world, BlockPos pos, EnumFacing facing, int step) {
+        BlockPos newPos = pos.offset(facing, step);
         IBlockState state = world.getBlockState(pos);
         TileEntity tileEntity = world.getTileEntity(pos);
         ItemStack[] stackInSlot=null;
@@ -102,7 +115,7 @@ class PoweredConstruct implements Construct {
      * If the lever is placed above grass, it will be destroyed as soon as it is placed.
      * Prevent this by setting the space to air if possible.
      */
-    private void doWeirdLeverFix(World world, BlockPos pos, IBlockState state) {
+    public static void doWeirdLeverFix(World world, BlockPos pos, IBlockState state) {
         if (state.getBlock().equals(Blocks.lever)
                 && !GeneralUtils.isBlockInPos(world, pos.offset(EnumFacing.DOWN), Blocks.air)
                 && GeneralUtils.canBlockBeReplaced(world, pos.offset(EnumFacing.DOWN))) {
@@ -114,13 +127,15 @@ class PoweredConstruct implements Construct {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         engine.readFromNBT(compound);
-        rails.readFromNBT(compound);
+        getRails().readFromNBT(compound);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         engine.writeToNBT(compound);
-        rails.writeToNBT(compound);
+        getRails().writeToNBT(compound);
 
     }
+
+
 }

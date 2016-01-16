@@ -81,6 +81,7 @@ class EngineModule implements Construct {
         this.activatorPos = GeneralUtils.readBlockPosFromNBT(tag, "activatorPos");
         this.controllerPos = GeneralUtils.readBlockPosFromNBT(tag, "controllerPos");
         this.propellerPos = GeneralUtils.readBlockPosFromNBT(tag, "propellerPos");
+        this.burnTimeLeft = tag.getInteger("engineModule");
     }
 
     public void writeToNBT(NBTTagCompound compound) {
@@ -88,6 +89,7 @@ class EngineModule implements Construct {
         GeneralUtils.writeBlockPosToNBT(tagCompound, "activatorPos", activatorPos);
         GeneralUtils.writeBlockPosToNBT(tagCompound, "controllerPos", controllerPos);
         GeneralUtils.writeBlockPosToNBT(tagCompound, "propellerPos", propellerPos);
+        tagCompound.setInteger("burnTimeLeft",burnTimeLeft);
         compound.setTag("engineModule", tagCompound);
     }
 

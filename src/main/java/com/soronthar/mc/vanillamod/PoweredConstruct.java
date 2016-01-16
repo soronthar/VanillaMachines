@@ -24,6 +24,21 @@ class PoweredConstruct implements Construct {
         this.rails = rails;
     }
 
+    public static PoweredConstruct detectPoweredConstruct(World world, BlockPos activatorPos) {
+        PoweredConstruct construct = null;
+        EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
+        if (engine!=null) {
+            BlockPos propellerPos = engine.propellerPos;
+            RailsModule railsModule = RailsModule.detectRailModule(world, propellerPos);
+
+            if (railsModule != null) {
+                construct = new PoweredConstruct(engine,railsModule);
+            }
+
+        }
+        return construct;
+    }
+
 
     public boolean move(World world, int step) {
         if (this.isValidStructure(world) && this.canMove(world, rails.facing, step)) {

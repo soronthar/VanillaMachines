@@ -22,10 +22,24 @@ class EngineModule implements Construct {
     public EngineModule() {
     }
 
-    public EngineModule(BlockPos activatorPos, BlockPos controllerPos, BlockPos propellerPos) {
+    private EngineModule(BlockPos activatorPos, BlockPos controllerPos, BlockPos propellerPos) {
         this.activatorPos = activatorPos;
         this.controllerPos = controllerPos;
         this.propellerPos = propellerPos;
+    }
+
+    public static EngineModule detectEngineModule(World world, BlockPos activatorPos) {
+        EngineModule engine=null;
+
+        EnumFacing controllerFacing = GeneralUtils.findBlockAround(world, activatorPos, getControllerBlock());
+        if (controllerFacing != null) {
+            BlockPos controllerPos = activatorPos.offset(controllerFacing);
+            BlockPos propellerPos = controllerPos.down();
+            if (GeneralUtils.isBlockInPos(world, propellerPos, getPropellerBlockOff())) {
+                engine=new EngineModule(activatorPos, controllerPos, propellerPos);
+            }
+        }
+        return engine;
     }
 
     public void burnFuel(World world) {

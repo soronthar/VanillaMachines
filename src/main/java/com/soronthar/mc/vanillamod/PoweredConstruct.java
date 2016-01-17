@@ -18,7 +18,6 @@ import java.util.List;
 
 class PoweredConstruct implements Construct {
     EngineModule engine;
-    private RailsModule rails;
     List<Construct> constructs=new ArrayList<Construct>();
 
     public PoweredConstruct() {
@@ -59,18 +58,20 @@ class PoweredConstruct implements Construct {
         }
     }
 
+    @Override
+    public void move(World world, EnumFacing facing, int step) {
+        engine.move(world,facing,step);
+        getRails().rails[0] = moveBlock(world, getRails().rails[0], facing, step);
+        getRails().rails[1] = moveBlock(world, getRails().rails[1], facing, step);
+        getRails().rails[2] = moveBlock(world, getRails().rails[2], facing, step);
+        getRails().rails[3] = moveBlock(world, getRails().rails[3], facing, step);
+        engine.burnFuel(world);
+    }
 
     public boolean move(World world, int step) {
         EnumFacing facing=getRails().facing;
         if (this.isValidStructure(world) && this.canMove(world, facing, step)) {
-            engine.activatorPos = moveBlock(world, engine.activatorPos, facing, step);
-            engine.controllerPos = moveBlock(world, engine.controllerPos, facing, step);
-            engine.propellerPos = moveBlock(world, engine.propellerPos, facing, step);
-            getRails().rails[0] = moveBlock(world, getRails().rails[0], facing, step);
-            getRails().rails[1] = moveBlock(world, getRails().rails[1], facing, step);
-            getRails().rails[2] = moveBlock(world, getRails().rails[2], facing, step);
-            getRails().rails[3] = moveBlock(world, getRails().rails[3], facing, step);
-            engine.burnFuel(world);
+            this.move(world, facing, step);
             return true;
         } else {
             return false;

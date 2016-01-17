@@ -89,7 +89,14 @@ class EngineModule implements Construct {
         }
     }
 
-    
+    @Override
+    public void move(World world, EnumFacing facing, int step) {
+        this.activatorPos = PoweredConstruct.moveBlock(world, this.activatorPos, facing, step);
+        this.controllerPos = PoweredConstruct.moveBlock(world, this.controllerPos, facing, step);
+        this.propellerPos = PoweredConstruct.moveBlock(world, this.propellerPos, facing, step);
+    }
+
+
     public void readFromNBT(NBTTagCompound compound) {
         NBTTagCompound tag = compound.getCompoundTag("engineModule");
         this.activatorPos = GeneralUtils.readBlockPosFromNBT(tag, "activatorPos");

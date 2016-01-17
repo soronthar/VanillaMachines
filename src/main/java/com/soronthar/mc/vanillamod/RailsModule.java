@@ -92,6 +92,11 @@ class RailsModule implements Construct{
 
 
     @Override
+    public void move(World world, EnumFacing facing, int step) {
+        
+    }
+
+    @Override
     public boolean isValidStructure(World world) {
         boolean valid=true;
         for (BlockPos rail : rails) {

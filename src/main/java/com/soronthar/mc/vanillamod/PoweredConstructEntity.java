@@ -25,24 +25,18 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
     public void update() {
         this.tick++;
         if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct!=null && this.tick%20==0) {
-            BlockPos leverPos = poweredConstruct.engine.activatorPos;
-            if (poweredConstruct.isValidStructure(getWorld())) {
-                if(Blocks.lever.equals(worldObj.getBlockState(leverPos).getBlock())) {
-                    if (!getWorld().isBlockPowered(leverPos)) {
-                        powerOff(leverPos);
+            BlockPos activatorPos = poweredConstruct.engine.activatorPos;
+            if (poweredConstruct.isValidStructure(getWorld()) && getWorld().isBlockPowered(activatorPos)) {
+                    poweredConstruct.engine.powerOn(getWorld());
+                    getWorld().removeTileEntity(activatorPos);
+                    boolean isMoving=poweredConstruct.move(getWorld(),  1);
+                    if (isMoving) {
+                        getWorld().setTileEntity(poweredConstruct.engine.activatorPos,this);
                     } else {
-                        poweredConstruct.engine.powerOn(getWorld());
-                        getWorld().removeTileEntity(leverPos);
-                        boolean isMoving=poweredConstruct.move(getWorld(), 1);
-                        if (isMoving) {
-                            getWorld().setTileEntity(poweredConstruct.engine.activatorPos,this);
-                        } else {
-                            powerOff(leverPos);
-                        }
+                        powerOff(activatorPos);
                     }
-                }
             } else {
-                powerOff(leverPos);
+                powerOff(activatorPos);
             }
         }
     }
@@ -51,8 +45,10 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
         poweredConstruct.powerOff(getWorld());
         getWorld().removeTileEntity(leverPos);
         IBlockState blockState = getWorld().getBlockState(leverPos);
-        getWorld().setBlockState(leverPos, blockState.withProperty(BlockLever.POWERED,false));
-        getWorld().markBlockForUpdate(leverPos);
+        if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
+            getWorld().setBlockState(leverPos, blockState.withProperty(BlockLever.POWERED,false));
+            getWorld().markBlockForUpdate(leverPos);
+        }
         this.invalidate();
     }
 

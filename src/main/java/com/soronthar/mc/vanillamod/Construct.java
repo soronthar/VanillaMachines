@@ -14,4 +14,6 @@ public interface Construct {
     boolean canMove(World world, EnumFacing facing, int step);
 
     void powerOff(World world);
+
+    void move(World world, EnumFacing facing, int step);
 }

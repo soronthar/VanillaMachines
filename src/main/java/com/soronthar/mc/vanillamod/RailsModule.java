@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 class RailsModule implements Construct{
-    BlockPos[] rails;
+    private BlockPos[] rails;
     EnumFacing facing;
 
 
@@ -93,7 +93,11 @@ class RailsModule implements Construct{
 
     @Override
     public void move(World world, EnumFacing facing, int step) {
-        
+        for (int i = 0; i < rails.length; i++) {
+            rails[i] = PoweredConstruct.moveBlock(world, rails[i], facing, step);
+
+        }
+
     }
 
     @Override

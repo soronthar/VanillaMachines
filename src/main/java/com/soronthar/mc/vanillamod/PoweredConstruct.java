@@ -61,10 +61,7 @@ class PoweredConstruct implements Construct {
     @Override
     public void move(World world, EnumFacing facing, int step) {
         engine.move(world,facing,step);
-        getRails().rails[0] = moveBlock(world, getRails().rails[0], facing, step);
-        getRails().rails[1] = moveBlock(world, getRails().rails[1], facing, step);
-        getRails().rails[2] = moveBlock(world, getRails().rails[2], facing, step);
-        getRails().rails[3] = moveBlock(world, getRails().rails[3], facing, step);
+        getRails().move(world, facing, step);
         engine.burnFuel(world);
     }
 
@@ -105,10 +102,10 @@ class PoweredConstruct implements Construct {
         doWeirdLeverFix(world, newPos, state);
 
         world.setBlockToAir(pos);
-        world.markBlockForUpdate(pos);
+//        world.markBlockForUpdate(pos);
 
         world.setBlockState(newPos, state);
-        world.markBlockForUpdate(newPos);
+//        world.markBlockForUpdate(newPos);
 
         if (stackInSlot!=null) {
             IInventory entity = (IInventory)world.getTileEntity(newPos);

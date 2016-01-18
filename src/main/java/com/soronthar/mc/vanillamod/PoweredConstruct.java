@@ -18,7 +18,7 @@ import java.util.List;
 
 class PoweredConstruct implements Construct {
     EngineModule engine;
-    List<Construct> constructs=new ArrayList<Construct>();
+    List<Construct> modules =new ArrayList<Construct>();
 
 
     public PoweredConstruct() {
@@ -29,11 +29,15 @@ class PoweredConstruct implements Construct {
     }
 
     public void addRails(RailsModule rails) {
-        this.constructs.add(rails);
+        this.modules.add(rails);
+    }
+
+    private void addModule(Construct construct) {
+        this.modules.add(construct);
     }
 
     public RailsModule getRails() {
-        return (RailsModule) constructs.get(0);
+        return (RailsModule) modules.get(0);
     }
 
     public static PoweredConstruct detectPoweredConstruct(World world, BlockPos activatorPos) {
@@ -46,23 +50,30 @@ class PoweredConstruct implements Construct {
 
             if (railsModule != null) {
                 construct.addRails(railsModule);
+                SmallDrillModule smallDrillModule = SmallDrillModule.detect(world, engine.controllerPos, railsModule.facing);
+                if (smallDrillModule !=null) {
+                    construct.addModule(smallDrillModule);
+                }
             }
 
         }
         return construct;
     }
 
+
     public void powerOff(World world) {
         engine.powerOff(world);
-        for (Construct construct : constructs) {
+        for (Construct construct : modules) {
             construct.powerOff(world);
         }
     }
 
     @Override
     public void move(World world, EnumFacing facing, int step) {
-        engine.move(world,facing,step);
-        getRails().move(world, facing, step);
+        for (Construct construct : modules) {
+            construct.move(world, facing, step);
+        }
+        engine.move(world, facing, step);
 //        engine.burnFuel(world);
     }
 
@@ -103,10 +114,7 @@ class PoweredConstruct implements Construct {
         doWeirdLeverFix(world, newPos, state);
 
         world.setBlockToAir(pos);
-//        world.markBlockForUpdate(pos);
-
         world.setBlockState(newPos, state);
-//        world.markBlockForUpdate(newPos);
 
         if (stackInSlot!=null) {
             IInventory entity = (IInventory)world.getTileEntity(newPos);

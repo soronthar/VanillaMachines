@@ -44,7 +44,6 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
                 powerOff(activatorPos);
             }
         }
-
     }
 
     private void powerOff(BlockPos leverPos) {

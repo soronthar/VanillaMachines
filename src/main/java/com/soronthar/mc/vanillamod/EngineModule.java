@@ -5,16 +5,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +21,6 @@ class EngineModule implements Construct {
     BlockPos propellerPos;
 
     int burnTimeLeft = 0;
-    int initialFuel = 0;
 
     public EngineModule() {
     }
@@ -45,18 +41,15 @@ class EngineModule implements Construct {
             if (isPropellerBlock(world.getBlockState(propellerPos))) {
                 engine = new EngineModule(activatorPos, controllerPos, propellerPos);
                 TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
-                engine.initialFuel = tileEntity.getStackInSlot(1).stackSize;
             }
         }
         return engine;
     }
 
-    public void burnFuel(World world) {
-        if (burnTimeLeft > 0) {
-            burnTimeLeft--;
-        }
+    public void burnFuel(World world, int size) {
 
-        if (burnTimeLeft == 0) {
+
+        if (burnTimeLeft <= size) {
             TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
             if (furnace != null
                     && furnace.getStackInSlot(1) != null
@@ -66,6 +59,9 @@ class EngineModule implements Construct {
                 burnTimeLeft += TileEntityFurnace.getItemBurnTime(itemStack);
             }
         }
+
+        burnTimeLeft -= size;
+        System.out.println("burnTimeLeft = " + burnTimeLeft);
     }
 
     @Override
@@ -82,7 +78,7 @@ class EngineModule implements Construct {
     }
 
     @Override
-    public boolean canMove(World world, EnumFacing facing, int step) {
+    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
         return true;
     }
 
@@ -154,11 +150,10 @@ class EngineModule implements Construct {
         return blockState != null && getControllerBlock().equals(blockState.getBlock());
     }
 
-
-    public void validateFuel(World world) {
-        TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
-        if (tileEntity.getStackInSlot(1) == null || tileEntity.getStackInSlot(1).stackSize != initialFuel) {
-            System.out.println("Fuel is wrong...");
-        }
+    public boolean hasFuelFor(World world, int count) {
+        TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
+        ItemStack fuelStack = furnace.getStackInSlot(1);
+        int additionalBurnTime = fuelStack != null ? fuelStack.stackSize * TileEntityFurnace.getItemBurnTime(fuelStack) : 0;
+        return this.burnTimeLeft + additionalBurnTime >= count;
     }
 }

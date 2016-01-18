@@ -1,10 +1,7 @@
 package com.soronthar.mc.vanillamod;
 
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import com.sun.xml.internal.ws.api.pipe.Engine;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -25,7 +22,6 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        poweredConstruct.engine.validateFuel(getWorld());
         this.tick++;
         if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct != null && this.tick % 20 == 0) {
             BlockPos activatorPos = poweredConstruct.engine.activatorPos;

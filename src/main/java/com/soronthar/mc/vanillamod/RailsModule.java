@@ -86,7 +86,7 @@ class RailsModule implements Construct{
     }
 
     @Override
-    public boolean canMove(World world, EnumFacing facing, int step) {
+    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
         boolean canMove=true;
         for (BlockPos rail : rails) {
             BlockPos newPos = rail.offset(facing, step);

@@ -7,7 +7,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class SmallDrillModule implements Construct {
     }
 
     @Override
-    public boolean canMove(World world, EnumFacing facing, int step) {
+    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
         return true;
     }
 

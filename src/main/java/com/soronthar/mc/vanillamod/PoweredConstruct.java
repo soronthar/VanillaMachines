@@ -12,7 +12,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -74,13 +73,14 @@ class PoweredConstruct implements Construct {
             construct.move(world, facing, step);
         }
         engine.move(world, facing, step);
-//        engine.burnFuel(world);
     }
 
     public boolean move(World world, int step) {
         EnumFacing facing=getRails().facing;
-        if (this.isValidStructure(world) && this.canMove(world, facing, step)) {
+        List<BlockPos> blockPosList = this.getBlockPosList();
+        if (this.isValidStructure(world) && this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world,blockPosList.size())) {
             this.move(world, facing, step);
+            engine.burnFuel(world,blockPosList.size());
             return true;
         } else {
             return false;
@@ -98,15 +98,14 @@ class PoweredConstruct implements Construct {
     }
 
     @Override
-    public boolean canMove(World world, EnumFacing facing, int step) {
-        List<BlockPos> blockPosList = getBlockPosList();
+    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
         boolean canMove=true;
         for (BlockPos blockPos : blockPosList) {
             BlockPos newPos = blockPos.offset(facing, step);
             canMove = canMove && (GeneralUtils.canBlockBeReplaced(world, newPos)
                                     || blockPosList.contains(newPos));
         }
-        return canMove && this.engine.canMove(world, facing, step) && this.getRails().canMove(world, facing, step); //TODO: remove the canMove method. it makes no sense
+        return canMove && this.engine.canMove(world, facing, step, blockPosList) && this.getRails().canMove(world, facing, step, blockPosList); //TODO: remove the canMove method. it makes no sense
     }
 
     @Override

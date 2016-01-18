@@ -14,6 +14,10 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 class EngineModule implements Construct {
     BlockPos activatorPos;
     BlockPos controllerPos;
@@ -73,10 +77,13 @@ class EngineModule implements Construct {
 
 
     @Override
+    public List<BlockPos> getBlockPosList() {
+        return Arrays.asList(controllerPos, activatorPos, propellerPos);
+    }
+
+    @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
-        return GeneralUtils.canBlockBeReplaced(world, this.propellerPos.offset(facing, step))
-                && GeneralUtils.canBlockBeReplaced(world, this.activatorPos.offset(facing, step))
-                && GeneralUtils.canBlockBeReplaced(world, this.controllerPos.offset(facing, step));
+        return true;
     }
 
 

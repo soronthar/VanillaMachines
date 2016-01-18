@@ -7,6 +7,10 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class SmallDrillModule implements Construct {
     BlockPos drillHeadPos;
 
@@ -21,6 +25,11 @@ public class SmallDrillModule implements Construct {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<BlockPos> getBlockPosList() {
+        return Collections.singletonList(drillHeadPos);
     }
 
     @Override
@@ -43,7 +52,7 @@ public class SmallDrillModule implements Construct {
 
     @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
-        return GeneralUtils.canBlockBeReplaced(world, this.drillHeadPos.offset(facing, step));
+        return true;
     }
 
     @Override

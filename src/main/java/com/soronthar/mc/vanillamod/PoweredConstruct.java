@@ -88,8 +88,25 @@ class PoweredConstruct implements Construct {
     }
 
     @Override
+    public List<BlockPos> getBlockPosList() {
+        List<BlockPos> constructBlocks=new ArrayList<BlockPos>();
+        constructBlocks.addAll(this.engine.getBlockPosList());
+        for (Construct construct : modules) {
+            constructBlocks.addAll(construct.getBlockPosList());
+        }
+        return constructBlocks;
+    }
+
+    @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
-        return this.engine.canMove(world, getRails().facing, step) && this.getRails().canMove(world, getRails().facing, step);
+        List<BlockPos> blockPosList = getBlockPosList();
+        boolean canMove=true;
+        for (BlockPos blockPos : blockPosList) {
+            BlockPos newPos = blockPos.offset(facing, step);
+            canMove = canMove && (GeneralUtils.canBlockBeReplaced(world, newPos)
+                                    || blockPosList.contains(newPos));
+        }
+        return canMove && this.engine.canMove(world, facing, step) && this.getRails().canMove(world, facing, step); //TODO: remove the canMove method. it makes no sense
     }
 
     @Override

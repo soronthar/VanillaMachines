@@ -8,6 +8,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+import java.util.List;
+
 class RailsModule implements Construct{
     private BlockPos[] rails;
     EnumFacing facing;
@@ -78,13 +81,16 @@ class RailsModule implements Construct{
     }
 
     @Override
+    public List<BlockPos> getBlockPosList() {
+        return Arrays.asList(rails);
+    }
+
+    @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
         boolean canMove=true;
         for (BlockPos rail : rails) {
             BlockPos newPos = rail.offset(facing, step);
             canMove = canMove
-                    && (GeneralUtils.canBlockBeReplaced(world, newPos)
-                        || GeneralUtils.isBlockInPos(world, newPos, getRailsBlock()))
                     && world.getBlockState(newPos.offset(EnumFacing.DOWN)).getBlock().isBlockSolid(world, newPos.offset(EnumFacing.DOWN), EnumFacing.UP);
         }
         return canMove;

@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +20,7 @@ class EngineModule implements Construct {
     BlockPos propellerPos;
 
     int burnTimeLeft=0;
+    int initialFuel=0;
 
     public EngineModule() {
     }
@@ -38,6 +40,8 @@ class EngineModule implements Construct {
             BlockPos propellerPos = controllerPos.down();
             if (isPropellerBlock(world.getBlockState(propellerPos))) {
                 engine=new EngineModule(activatorPos, controllerPos, propellerPos);
+                TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
+                engine.initialFuel=tileEntity.getStackInSlot(1).stackSize;
             }
         }
         return engine;
@@ -145,4 +149,10 @@ class EngineModule implements Construct {
     }
 
 
+    public void validateFuel(World world) {
+        TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
+        if (tileEntity.getStackInSlot(1) ==null || tileEntity.getStackInSlot(1).stackSize!=initialFuel) {
+            System.out.println("Fuel is wrong...");
+        }
+    }
 }

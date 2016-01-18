@@ -20,6 +20,7 @@ class PoweredConstruct implements Construct {
     EngineModule engine;
     List<Construct> constructs=new ArrayList<Construct>();
 
+
     public PoweredConstruct() {
     }
 
@@ -62,7 +63,7 @@ class PoweredConstruct implements Construct {
     public void move(World world, EnumFacing facing, int step) {
         engine.move(world,facing,step);
         getRails().move(world, facing, step);
-        engine.burnFuel(world);
+//        engine.burnFuel(world);
     }
 
     public boolean move(World world, int step) {

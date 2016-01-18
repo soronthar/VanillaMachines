@@ -1,5 +1,7 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import com.sun.xml.internal.ws.api.pipe.Engine;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -23,22 +25,26 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
 
     @Override
     public void update() {
+        poweredConstruct.engine.validateFuel(getWorld());
         this.tick++;
-        if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct!=null && this.tick%20==0) {
+        if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct != null && this.tick % 20 == 0) {
             BlockPos activatorPos = poweredConstruct.engine.activatorPos;
             if (poweredConstruct.isValidStructure(getWorld()) && getWorld().isBlockPowered(activatorPos)) {
+                if (!GeneralUtils.isBlockInPos(getWorld(), poweredConstruct.engine.propellerPos, EngineModule.getPropellerBlockOn())) {
                     poweredConstruct.engine.powerOn(getWorld());
-                    getWorld().removeTileEntity(activatorPos);
-                    boolean isMoving=poweredConstruct.move(getWorld(),  1);
-                    if (isMoving) {
-                        getWorld().setTileEntity(poweredConstruct.engine.activatorPos,this);
-                    } else {
-                        powerOff(activatorPos);
-                    }
+                }
+                getWorld().removeTileEntity(activatorPos);
+                boolean isMoving = poweredConstruct.move(getWorld(), 1);
+                if (isMoving) {
+                    getWorld().setTileEntity(poweredConstruct.engine.activatorPos, this);
+                } else {
+                    powerOff(activatorPos);
+                }
             } else {
                 powerOff(activatorPos);
             }
         }
+
     }
 
     private void powerOff(BlockPos leverPos) {
@@ -46,7 +52,7 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
         getWorld().removeTileEntity(leverPos);
         IBlockState blockState = getWorld().getBlockState(leverPos);
         if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
-            getWorld().setBlockState(leverPos, blockState.withProperty(BlockLever.POWERED,false));
+            getWorld().setBlockState(leverPos, blockState.withProperty(BlockLever.POWERED, false));
             getWorld().markBlockForUpdate(leverPos);
         }
         this.invalidate();

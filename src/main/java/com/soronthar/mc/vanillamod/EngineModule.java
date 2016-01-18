@@ -19,8 +19,8 @@ class EngineModule implements Construct {
     BlockPos controllerPos;
     BlockPos propellerPos;
 
-    int burnTimeLeft=0;
-    int initialFuel=0;
+    int burnTimeLeft = 0;
+    int initialFuel = 0;
 
     public EngineModule() {
     }
@@ -32,34 +32,34 @@ class EngineModule implements Construct {
     }
 
     public static EngineModule detectEngineModule(World world, BlockPos activatorPos) {
-        EngineModule engine=null;
+        EngineModule engine = null;
 
         EnumFacing controllerFacing = GeneralUtils.findBlockAround(world, activatorPos, getControllerBlock());
         if (controllerFacing != null) {
             BlockPos controllerPos = activatorPos.offset(controllerFacing);
             BlockPos propellerPos = controllerPos.down();
             if (isPropellerBlock(world.getBlockState(propellerPos))) {
-                engine=new EngineModule(activatorPos, controllerPos, propellerPos);
+                engine = new EngineModule(activatorPos, controllerPos, propellerPos);
                 TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
-                engine.initialFuel=tileEntity.getStackInSlot(1).stackSize;
+                engine.initialFuel = tileEntity.getStackInSlot(1).stackSize;
             }
         }
         return engine;
     }
 
     public void burnFuel(World world) {
-        if (burnTimeLeft>0) {
+        if (burnTimeLeft > 0) {
             burnTimeLeft--;
         }
 
-        if (burnTimeLeft==0) {
+        if (burnTimeLeft == 0) {
             TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
-            if (furnace!=null
-            && furnace.getStackInSlot(1) != null
-                    && furnace.getStackInSlot(1).stackSize>0
+            if (furnace != null
+                    && furnace.getStackInSlot(1) != null
+                    && furnace.getStackInSlot(1).stackSize > 0
                     ) {
                 ItemStack itemStack = furnace.decrStackSize(1, 1);
-                burnTimeLeft+=TileEntityFurnace.getItemBurnTime(itemStack);
+                burnTimeLeft += TileEntityFurnace.getItemBurnTime(itemStack);
             }
         }
     }
@@ -72,23 +72,22 @@ class EngineModule implements Construct {
     }
 
 
-
     @Override
     public boolean canMove(World world, EnumFacing facing, int step) {
-        return  GeneralUtils.canBlockBeReplaced(world, this.propellerPos.offset(facing, step))
+        return GeneralUtils.canBlockBeReplaced(world, this.propellerPos.offset(facing, step))
                 && GeneralUtils.canBlockBeReplaced(world, this.activatorPos.offset(facing, step))
                 && GeneralUtils.canBlockBeReplaced(world, this.controllerPos.offset(facing, step));
     }
 
 
     public void powerOn(World world) {
-        if (world.getBlockState(this.propellerPos)!=null) {
+        if (!GeneralUtils.isBlockInPos(world, this.propellerPos, EngineModule.getPropellerBlockOn())) {
             BlockFurnace.setState(true, world, this.propellerPos);
         }
     }
 
     public void powerOff(World world) {
-        if (world.getBlockState(this.propellerPos)!=null) {
+        if (world.getBlockState(this.propellerPos) != null) {
             BlockFurnace.setState(false, world, this.propellerPos);
         }
     }
@@ -114,7 +113,7 @@ class EngineModule implements Construct {
         GeneralUtils.writeBlockPosToNBT(tagCompound, "activatorPos", activatorPos);
         GeneralUtils.writeBlockPosToNBT(tagCompound, "controllerPos", controllerPos);
         GeneralUtils.writeBlockPosToNBT(tagCompound, "propellerPos", propellerPos);
-        tagCompound.setInteger("burnTimeLeft",burnTimeLeft);
+        tagCompound.setInteger("burnTimeLeft", burnTimeLeft);
         compound.setTag("engineModule", tagCompound);
     }
 
@@ -145,13 +144,13 @@ class EngineModule implements Construct {
     }
 
     private boolean isControllerBlock(IBlockState blockState) {
-        return blockState!=null && getControllerBlock().equals(blockState.getBlock());
+        return blockState != null && getControllerBlock().equals(blockState.getBlock());
     }
 
 
     public void validateFuel(World world) {
         TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
-        if (tileEntity.getStackInSlot(1) ==null || tileEntity.getStackInSlot(1).stackSize!=initialFuel) {
+        if (tileEntity.getStackInSlot(1) == null || tileEntity.getStackInSlot(1).stackSize != initialFuel) {
             System.out.println("Fuel is wrong...");
         }
     }

@@ -30,9 +30,7 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
         if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct != null && this.tick % 20 == 0) {
             BlockPos activatorPos = poweredConstruct.engine.activatorPos;
             if (poweredConstruct.isValidStructure(getWorld()) && getWorld().isBlockPowered(activatorPos)) {
-                if (!GeneralUtils.isBlockInPos(getWorld(), poweredConstruct.engine.propellerPos, EngineModule.getPropellerBlockOn())) {
-                    poweredConstruct.engine.powerOn(getWorld());
-                }
+                poweredConstruct.engine.powerOn(getWorld());
                 getWorld().removeTileEntity(activatorPos);
                 boolean isMoving = poweredConstruct.move(getWorld(), 1);
                 if (isMoving) {

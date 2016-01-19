@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -98,6 +99,15 @@ class PoweredConstruct implements Construct {
     }
 
     @Override
+    public boolean hasFinishedOperation(World world) {
+        boolean result=true;
+        for (Construct construct : modules) {
+            result = result && construct.hasFinishedOperation(world);
+        }
+        return result;
+    }
+
+    @Override
     public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
         boolean canMove=true;
         for (BlockPos blockPos : blockPosList) {
@@ -169,4 +179,9 @@ class PoweredConstruct implements Construct {
     }
 
 
+    public void performOperation(World world) {
+        for (Construct construct : modules) {
+            construct.performOperation(world);
+        }
+    }
 }

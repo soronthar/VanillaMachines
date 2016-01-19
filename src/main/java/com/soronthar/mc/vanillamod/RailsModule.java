@@ -86,6 +86,15 @@ class RailsModule implements Construct{
     }
 
     @Override
+    public boolean hasFinishedOperation(World world) {
+        return true;
+    }
+
+    @Override
+    public void performOperation(World world) {
+    }
+
+    @Override
     public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
         boolean canMove=true;
         for (BlockPos rail : rails) {

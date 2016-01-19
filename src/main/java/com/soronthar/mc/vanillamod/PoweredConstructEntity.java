@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
+import net.minecraft.world.World;
 
 //TODOÑ chunk borders... stop if chunk is not loaded.
 //TODO: When the world is closed, the furnace keeps "burning"
@@ -23,20 +24,29 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
     @Override
     public void update() {
         this.tick++;
-        if (!getWorld().isRemote && !this.isInvalid() && poweredConstruct != null && this.tick % 20 == 0) {
+        World world = getWorld();
+        if (!world.isRemote && !this.isInvalid() && poweredConstruct != null && this.tick % 20 == 0) {
             BlockPos activatorPos = poweredConstruct.engine.activatorPos;
-            if (poweredConstruct.isValidStructure(getWorld()) && getWorld().isBlockPowered(activatorPos)) {
-                poweredConstruct.engine.powerOn(getWorld());
-                getWorld().removeTileEntity(activatorPos);
-                boolean isMoving = poweredConstruct.move(getWorld(), 1);
-                if (isMoving) {
-                    getWorld().setTileEntity(poweredConstruct.engine.activatorPos, this);
+            if (poweredConstruct.isValidStructure(world) && world.isBlockPowered(activatorPos)) {
+                poweredConstruct.engine.powerOn(world);
+                if (!poweredConstruct.hasFinishedOperation(world)) {
+                    poweredConstruct.performOperation(world);
                 } else {
-                    powerOff(activatorPos);
+                    move(activatorPos);
                 }
             } else {
                 powerOff(activatorPos);
             }
+        }
+    }
+
+    private void move(BlockPos activatorPos) {
+        getWorld().removeTileEntity(activatorPos);
+        boolean isMoving = poweredConstruct.move(getWorld(), 1);
+        if (isMoving) {
+            getWorld().setTileEntity(poweredConstruct.engine.activatorPos, this);
+        } else {
+            powerOff(activatorPos);
         }
     }
 

@@ -22,4 +22,8 @@ public interface Construct {
     void move(World world, EnumFacing facing, int step);
 
     List<BlockPos> getBlockPosList();
+
+    boolean hasFinishedOperation(World world);
+
+    void performOperation(World world);
 }

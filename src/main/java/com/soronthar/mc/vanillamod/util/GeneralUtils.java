@@ -55,4 +55,8 @@ public class GeneralUtils {
                 || block instanceof BlockDoublePlant
                 || block instanceof BlockFlower;
     }
+
+    public static boolean isLiquid(World world, BlockPos pos) {
+        return world.getBlockState(pos).getBlock().getMaterial().isLiquid();
+    }
 }

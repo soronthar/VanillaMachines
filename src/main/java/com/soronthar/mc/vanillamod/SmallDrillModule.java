@@ -4,10 +4,10 @@ import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import scala.tools.nsc.backend.icode.analysis.TypeFlowAnalysis;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +16,7 @@ public class SmallDrillModule implements Construct {
     BlockPos drillHeadPos;
     BlockPos[] drillArea=new BlockPos[9];
     int currentDrillCell=0;
+    private boolean canMove = true;
 
     public SmallDrillModule(BlockPos drillHeadPos, EnumFacing facing) {
         this.drillHeadPos = drillHeadPos;
@@ -57,9 +58,10 @@ public class SmallDrillModule implements Construct {
 
     @Override
     public void performOperation(World world) {
-        while(this.currentDrillCell<this.drillArea.length && world.isAirBlock(getCurrentDrillBlock()) ) {
+        while(this.currentDrillCell<this.drillArea.length && (world.isAirBlock(getCurrentDrillBlock()) || GeneralUtils.isLiquid(world,getCurrentDrillBlock()))) {
             this.currentDrillCell++;
         }
+
         if (this.currentDrillCell<this.drillArea.length) {
             IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
             blockState.getBlock().dropBlockAsItem(world, getCurrentDrillBlock(), blockState, 0);
@@ -67,6 +69,10 @@ public class SmallDrillModule implements Construct {
         } else {
             this.currentDrillCell=0;
         }
+    }
+
+    private AxisAlignedBB getDrillAreaAxis() {
+        return new AxisAlignedBB(drillArea[0],drillArea[8]);
     }
 
     private BlockPos getCurrentDrillBlock() {
@@ -95,7 +101,7 @@ public class SmallDrillModule implements Construct {
 
     @Override
     public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
-        return true;
+        return canMove;
     }
 
     @Override

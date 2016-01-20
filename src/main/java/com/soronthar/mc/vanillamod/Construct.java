@@ -11,10 +11,6 @@ import java.util.List;
 public interface Construct {
     boolean isValidStructure(World world);
 
-    void readFromNBT(NBTTagCompound compound);
-
-    void writeToNBT(NBTTagCompound compound);
-
     void move(World world, EnumFacing facing, int step);
 
     List<BlockPos> getBlockPosList();

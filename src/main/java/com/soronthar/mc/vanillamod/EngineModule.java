@@ -96,24 +96,6 @@ class EngineModule implements Construct {
         this.propellerPos = MovingMachine.moveBlock(world, this.propellerPos, facing, step);
     }
 
-
-    public void readFromNBT(NBTTagCompound compound) {
-        NBTTagCompound tag = compound.getCompoundTag("engineModule");
-        this.activatorPos = GeneralUtils.readBlockPosFromNBT(tag, "activatorPos");
-        this.controllerPos = GeneralUtils.readBlockPosFromNBT(tag, "controllerPos");
-        this.propellerPos = GeneralUtils.readBlockPosFromNBT(tag, "propellerPos");
-        this.burnTimeLeft = tag.getInteger("burnTimeLeft");
-    }
-
-    public void writeToNBT(NBTTagCompound compound) {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        GeneralUtils.writeBlockPosToNBT(tagCompound, "activatorPos", activatorPos);
-        GeneralUtils.writeBlockPosToNBT(tagCompound, "controllerPos", controllerPos);
-        GeneralUtils.writeBlockPosToNBT(tagCompound, "propellerPos", propellerPos);
-        tagCompound.setInteger("burnTimeLeft", burnTimeLeft);
-        compound.setTag("engineModule", tagCompound);
-    }
-
     public static Block getActivatorBlock() {
         return Blocks.lever;
     }
@@ -149,5 +131,9 @@ class EngineModule implements Construct {
         ItemStack fuelStack = furnace.getStackInSlot(1);
         int additionalBurnTime = fuelStack != null ? fuelStack.stackSize * TileEntityFurnace.getItemBurnTime(fuelStack) : 0;
         return this.burnTimeLeft + additionalBurnTime >= count;
+    }
+
+    public boolean isPowered(World world) {
+        return GeneralUtils.isBlockInPos(world,propellerPos, EngineModule.getPropellerBlockOn());
     }
 }

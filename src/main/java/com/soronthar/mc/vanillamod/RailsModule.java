@@ -55,23 +55,6 @@ class RailsModule implements Construct{
         return railsModule;
     }
 
-    public void readFromNBT(NBTTagCompound compound) {
-        NBTTagCompound tag = compound.getCompoundTag("railsModule");
-        this.facing=EnumFacing.getFront(tag.getInteger("railsFacing"));
-        for (int i = 0; i < rails.length; i++) {
-            rails[i]=GeneralUtils.readBlockPosFromNBT(tag,"rails."+i);
-        }
-    }
-
-    public void writeToNBT(NBTTagCompound compound) {
-        NBTTagCompound tag =new NBTTagCompound();
-        tag.setInteger("railsFacing", facing.getIndex());
-        for (int i = 0; i < rails.length; i++) {
-            GeneralUtils.writeBlockPosToNBT(tag, "rails." + i, rails[i]);
-        }
-        compound.setTag("railsModule",tag);
-    }
-
     @Override
     public List<BlockPos> getBlockPosList() {
         return Arrays.asList(rails);
@@ -94,7 +77,6 @@ class RailsModule implements Construct{
             rails[i] = MovingMachine.moveBlock(world, rails[i], facing, step);
 
         }
-
     }
 
     @Override

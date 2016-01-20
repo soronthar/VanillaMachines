@@ -1,6 +1,7 @@
 package com.soronthar.mc.vanillamod;
 
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +25,7 @@ public class SmallDrillModule implements Drill {
 
     public static SmallDrillModule detect(World world, BlockPos controllerPos, EnumFacing facing) {
         BlockPos drillHeadPos = controllerPos.offset(facing);
-        if (GeneralUtils.isBlockInPos(world, drillHeadPos, Blocks.iron_block)) {
+        if (GeneralUtils.isBlockInPos(world, drillHeadPos, getDrillHeadBlock())) {
             return new SmallDrillModule(drillHeadPos, facing);
         } else {
             return null;
@@ -76,20 +77,11 @@ public class SmallDrillModule implements Drill {
 
     @Override
     public boolean isValidStructure(World world) {
-        return GeneralUtils.isBlockInPos(world, this.drillHeadPos, Blocks.iron_block); //TODO: encapsulate the iron_block thingie
+        return GeneralUtils.isBlockInPos(world, this.drillHeadPos, getDrillHeadBlock());
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        NBTTagCompound tag = compound.getCompoundTag("smallDrillModule");
-        this.drillHeadPos = GeneralUtils.readBlockPosFromNBT(tag, "drillHeadPos");
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        NBTTagCompound tag = new NBTTagCompound();
-        GeneralUtils.writeBlockPosToNBT(tag, "drillHeadPos", this.drillHeadPos);
-        compound.setTag("smallDrillModule", tag);
+    private static Block getDrillHeadBlock() {
+        return Blocks.iron_block;
     }
 
     @Override

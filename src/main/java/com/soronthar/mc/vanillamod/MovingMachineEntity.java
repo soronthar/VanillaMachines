@@ -1,5 +1,6 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +29,10 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
         if (!world.isRemote && !this.isInvalid() && movingMachine != null && this.tick % 20 == 0) {
             BlockPos activatorPos = movingMachine.engine.activatorPos;
             if (movingMachine.isValidStructure(world) && world.isBlockPowered(activatorPos)) {
-                movingMachine.engine.powerOn(world);
+                if (!movingMachine.engine.isPowered(world)) {
+                        movingMachine.engine.powerOn(world);
+                }
+
                 if (!movingMachine.hasFinishedOperation(world)) {
                     movingMachine.performOperation(world,this.tick);
                 } else {
@@ -61,19 +65,6 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
         this.invalidate();
     }
 
-
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        movingMachine.readFromNBT(compound);
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        movingMachine.writeToNBT(compound);
-
-    }
 
     @Override
     protected void finalize() throws Throwable {

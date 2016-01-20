@@ -37,14 +37,6 @@ class MovingMachine {
         }
 
         @Override
-        public void readFromNBT(NBTTagCompound compound) {
-        }
-
-        @Override
-        public void writeToNBT(NBTTagCompound compound) {
-        }
-
-        @Override
         public void move(World world, EnumFacing facing, int step) {
         }
 
@@ -71,10 +63,6 @@ class MovingMachine {
         this.rails = rails;
     }
 
-    public RailsModule getRails() {
-        return this.rails;
-    }
-
     private void addDrill(Drill drill) {
         this.drill = drill;
     }
@@ -99,25 +87,24 @@ class MovingMachine {
         return construct;
     }
 
+    public boolean isValidStructure(World world) {
+        return engine.isValidStructure(world)
+                && rails.isValidStructure(world);
+    }
 
     public void powerOff(World world) {
         engine.powerOff(world);
         drill.powerOff(world);
     }
 
-
-    public boolean move(World world, int step) {
-        EnumFacing facing = getRails().facing;
-        List<BlockPos> blockPosList = this.getBlockPosList();
-        if (this.isValidStructure(world) && this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world, blockPosList.size())) {
-            drill.move(world, facing, step);
-            engine.move(world, facing, step);
-            rails.move(world, facing, step);
-            engine.burnFuel(world, blockPosList.size()); //TODO: each module burns fuel
-            return true;
-        } else {
-            return false;
+    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
+        boolean canMove = true;
+        for (BlockPos blockPos : blockPosList) {
+            BlockPos newPos = blockPos.offset(facing, step);
+            canMove = canMove && (GeneralUtils.canBlockBeReplaced(world, newPos)
+                    || blockPosList.contains(newPos));
         }
+        return canMove && this.rails.hasSupport(world, facing, step, blockPosList);
     }
 
     public List<BlockPos> getBlockPosList() {
@@ -128,23 +115,19 @@ class MovingMachine {
         return constructBlocks;
     }
 
-    public boolean hasFinishedOperation(World world) {
-        return  drill.hasFinishedOperation(world);
-    }
+    public boolean move(World world, int step) {
+        EnumFacing facing = rails.facing;
+        List<BlockPos> blockPosList = this.getBlockPosList();
+        if (this.isValidStructure(world) && this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world, blockPosList.size())) {
+            drill.move(world, facing, step);
+            engine.move(world, facing, step);
+            rails.move(world, facing, step);
+            engine.burnFuel(world, blockPosList.size()+drill.fuelBurn(world));
 
-    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
-        boolean canMove = true;
-        for (BlockPos blockPos : blockPosList) {
-            BlockPos newPos = blockPos.offset(facing, step);
-            canMove = canMove && (GeneralUtils.canBlockBeReplaced(world, newPos)
-                    || blockPosList.contains(newPos));
+            return true;
+        } else {
+            return false;
         }
-        return canMove && this.getRails().hasSupport(world, facing, step, blockPosList);
-    }
-
-    public boolean isValidStructure(World world) {
-        return engine.isValidStructure(world)
-                && getRails().isValidStructure(world);
     }
 
     public static BlockPos moveBlock(World world, BlockPos pos, EnumFacing facing, int step) {
@@ -188,17 +171,10 @@ class MovingMachine {
         }
     }
 
-    public void readFromNBT(NBTTagCompound compound) {
-        engine.readFromNBT(compound);
-        getRails().readFromNBT(compound);
+
+    public boolean hasFinishedOperation(World world) {
+        return drill.hasFinishedOperation(world);
     }
-
-    public void writeToNBT(NBTTagCompound compound) {
-        engine.writeToNBT(compound);
-        getRails().writeToNBT(compound);
-
-    }
-
 
     public void performOperation(World world, int tick) {
         if (drill!= null) {

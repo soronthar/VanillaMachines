@@ -23,7 +23,4 @@ public interface Construct {
 
     List<BlockPos> getBlockPosList();
 
-    boolean hasFinishedOperation(World world);
-
-    void performOperation(World world);
 }

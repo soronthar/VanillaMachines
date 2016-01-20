@@ -12,16 +12,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
-class PoweredConstruct implements Construct {
+class PoweredConstruct implements Machinery {
     EngineModule engine;
-    RailsModule module;
+    RailsModule rails;
     Drill drill;
-    Harvesters harvesters;
-    Deployers deployers;
+    List<Harvester> harvester;
+    List<Deployer> deployer;
 
     List<Construct> modules =new ArrayList<Construct>();
 
@@ -29,12 +28,9 @@ class PoweredConstruct implements Construct {
     public PoweredConstruct() {
     }
 
-    public PoweredConstruct(EngineModule engine) {
+    public PoweredConstruct(EngineModule engine, RailsModule rails) {
         this.engine = engine;
-    }
-
-    public void addRails(RailsModule rails) {
-        this.modules.add(rails);
+        this.rails=rails;
     }
 
     private void addModule(Construct construct) {
@@ -42,19 +38,18 @@ class PoweredConstruct implements Construct {
     }
 
     public RailsModule getRails() {
-        return (RailsModule) modules.get(0);
+        return this.rails;
     }
 
     public static PoweredConstruct detectPoweredConstruct(World world, BlockPos activatorPos) {
         PoweredConstruct construct = null;
         EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
         if (engine!=null) {
-            construct = new PoweredConstruct(engine);
             BlockPos propellerPos = engine.propellerPos;
             RailsModule railsModule = RailsModule.detectRailModule(world, propellerPos);
 
             if (railsModule != null) {
-                construct.addRails(railsModule);
+                construct = new PoweredConstruct(engine,railsModule);
                 SmallDrillModule smallDrillModule = SmallDrillModule.detect(world, engine.controllerPos, railsModule.facing);
                 if (smallDrillModule !=null) {
                     construct.addModule(smallDrillModule);
@@ -79,6 +74,7 @@ class PoweredConstruct implements Construct {
             construct.move(world, facing, step);
         }
         engine.move(world, facing, step);
+        rails.move(world, facing, step);
     }
 
     public boolean move(World world, int step) {
@@ -97,6 +93,7 @@ class PoweredConstruct implements Construct {
     public List<BlockPos> getBlockPosList() {
         List<BlockPos> constructBlocks=new ArrayList<BlockPos>();
         constructBlocks.addAll(this.engine.getBlockPosList());
+        constructBlocks.addAll(this.rails.getBlockPosList());
         for (Construct construct : modules) {
             constructBlocks.addAll(construct.getBlockPosList());
         }
@@ -107,7 +104,9 @@ class PoweredConstruct implements Construct {
     public boolean hasFinishedOperation(World world) {
         boolean result=true;
         for (Construct construct : modules) {
-            result = result && construct.hasFinishedOperation(world);
+            if (construct instanceof Machinery) {
+                result = result && ((Machinery)construct).hasFinishedOperation(world);
+            }
         }
         return result;
     }
@@ -186,7 +185,9 @@ class PoweredConstruct implements Construct {
 
     public void performOperation(World world) {
         for (Construct construct : modules) {
-            construct.performOperation(world);
+            if (construct instanceof Machinery) {
+                ((Machinery)construct).performOperation(world);
+            }
         }
     }
 }

@@ -12,25 +12,25 @@ import net.minecraft.world.World;
 //TODO: When the world is closed, the furnace keeps "burning"
 //TODO: Persist the entity..somehow.
 //TODO: the construct should have a reference to the world.
-public class PoweredConstructEntity extends TileEntity implements ITickable {
+public class MovingMachineEntity extends TileEntity implements ITickable {
 
-    PoweredConstruct poweredConstruct;
+    MovingMachine movingMachine;
     int tick;
 
-    public PoweredConstructEntity(PoweredConstruct poweredConstruct) {
-        this.poweredConstruct = poweredConstruct;
+    public MovingMachineEntity(MovingMachine movingMachine) {
+        this.movingMachine = movingMachine;
     }
 
     @Override
     public void update() {
         this.tick++;
         World world = getWorld();
-        if (!world.isRemote && !this.isInvalid() && poweredConstruct != null && this.tick % 20 == 0) {
-            BlockPos activatorPos = poweredConstruct.engine.activatorPos;
-            if (poweredConstruct.isValidStructure(world) && world.isBlockPowered(activatorPos)) {
-                poweredConstruct.engine.powerOn(world);
-                if (!poweredConstruct.hasFinishedOperation(world)) {
-                    poweredConstruct.performOperation(world);
+        if (!world.isRemote && !this.isInvalid() && movingMachine != null && this.tick % 20 == 0) {
+            BlockPos activatorPos = movingMachine.engine.activatorPos;
+            if (movingMachine.isValidStructure(world) && world.isBlockPowered(activatorPos)) {
+                movingMachine.engine.powerOn(world);
+                if (!movingMachine.hasFinishedOperation(world)) {
+                    movingMachine.performOperation(world,this.tick);
                 } else {
                     move(activatorPos);
                 }
@@ -42,16 +42,16 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
 
     private void move(BlockPos activatorPos) {
         getWorld().removeTileEntity(activatorPos);
-        boolean isMoving = poweredConstruct.move(getWorld(), 1);
+        boolean isMoving = movingMachine.move(getWorld(), 1);
         if (isMoving) {
-            getWorld().setTileEntity(poweredConstruct.engine.activatorPos, this);
+            getWorld().setTileEntity(movingMachine.engine.activatorPos, this);
         } else {
             powerOff(activatorPos);
         }
     }
 
     private void powerOff(BlockPos leverPos) {
-        poweredConstruct.powerOff(getWorld());
+        movingMachine.powerOff(getWorld());
         getWorld().removeTileEntity(leverPos);
         IBlockState blockState = getWorld().getBlockState(leverPos);
         if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
@@ -65,13 +65,13 @@ public class PoweredConstructEntity extends TileEntity implements ITickable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        poweredConstruct.readFromNBT(compound);
+        movingMachine.readFromNBT(compound);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        poweredConstruct.writeToNBT(compound);
+        movingMachine.writeToNBT(compound);
 
     }
 

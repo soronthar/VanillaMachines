@@ -12,47 +12,86 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
-class PoweredConstruct implements Machinery {
+class MovingMachine {
     EngineModule engine;
     RailsModule rails;
-    Drill drill;
-    List<Harvester> harvester;
-    List<Deployer> deployer;
+    Drill drill=new Drill() {
+        @Override
+        public boolean hasFinishedOperation(World world) { return true; }
 
-    List<Construct> modules =new ArrayList<Construct>();
+        @Override
+        public void powerOff(World world) {
+        }
+
+        @Override
+        public void performOperation(World world, int tick) {
+        }
+
+        @Override
+        public boolean isValidStructure(World world) {
+            return true;
+        }
+
+        @Override
+        public void readFromNBT(NBTTagCompound compound) {
+        }
+
+        @Override
+        public void writeToNBT(NBTTagCompound compound) {
+        }
+
+        @Override
+        public void move(World world, EnumFacing facing, int step) {
+        }
+
+        @Override
+        public List<BlockPos> getBlockPosList() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public int fuelBurn(World world) {
+            return 0;
+        }
+    };
 
 
-    public PoweredConstruct() {
+    List<Harvester> harvester = new ArrayList<>();
+    List<Deployer> deployer = new ArrayList<>();
+
+    public MovingMachine() {
     }
 
-    public PoweredConstruct(EngineModule engine, RailsModule rails) {
+    public MovingMachine(EngineModule engine, RailsModule rails) {
         this.engine = engine;
-        this.rails=rails;
-    }
-
-    private void addModule(Construct construct) {
-        this.modules.add(construct);
+        this.rails = rails;
     }
 
     public RailsModule getRails() {
         return this.rails;
     }
 
-    public static PoweredConstruct detectPoweredConstruct(World world, BlockPos activatorPos) {
-        PoweredConstruct construct = null;
+    private void addDrill(Drill drill) {
+        this.drill = drill;
+    }
+
+
+    public static MovingMachine detectPoweredConstruct(World world, BlockPos activatorPos) {
+        MovingMachine construct = null;
         EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
-        if (engine!=null) {
+        if (engine != null) {
             BlockPos propellerPos = engine.propellerPos;
             RailsModule railsModule = RailsModule.detectRailModule(world, propellerPos);
 
             if (railsModule != null) {
-                construct = new PoweredConstruct(engine,railsModule);
+                construct = new MovingMachine(engine, railsModule);
                 SmallDrillModule smallDrillModule = SmallDrillModule.detect(world, engine.controllerPos, railsModule.facing);
-                if (smallDrillModule !=null) {
-                    construct.addModule(smallDrillModule);
+                if (smallDrillModule != null) {
+                    construct.addDrill(smallDrillModule);
                 }
             }
 
@@ -63,66 +102,46 @@ class PoweredConstruct implements Machinery {
 
     public void powerOff(World world) {
         engine.powerOff(world);
-        for (Construct construct : modules) {
-            construct.powerOff(world);
-        }
+        drill.powerOff(world);
     }
 
-    @Override
-    public void move(World world, EnumFacing facing, int step) {
-        for (Construct construct : modules) {
-            construct.move(world, facing, step);
-        }
-        engine.move(world, facing, step);
-        rails.move(world, facing, step);
-    }
 
     public boolean move(World world, int step) {
-        EnumFacing facing=getRails().facing;
+        EnumFacing facing = getRails().facing;
         List<BlockPos> blockPosList = this.getBlockPosList();
-        if (this.isValidStructure(world) && this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world,blockPosList.size())) {
-            this.move(world, facing, step);
-            engine.burnFuel(world,blockPosList.size());
+        if (this.isValidStructure(world) && this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world, blockPosList.size())) {
+            drill.move(world, facing, step);
+            engine.move(world, facing, step);
+            rails.move(world, facing, step);
+            engine.burnFuel(world, blockPosList.size()); //TODO: each module burns fuel
             return true;
         } else {
             return false;
         }
     }
 
-    @Override
     public List<BlockPos> getBlockPosList() {
-        List<BlockPos> constructBlocks=new ArrayList<BlockPos>();
+        List<BlockPos> constructBlocks = new ArrayList<BlockPos>();
         constructBlocks.addAll(this.engine.getBlockPosList());
         constructBlocks.addAll(this.rails.getBlockPosList());
-        for (Construct construct : modules) {
-            constructBlocks.addAll(construct.getBlockPosList());
-        }
+        constructBlocks.addAll(this.drill.getBlockPosList());
         return constructBlocks;
     }
 
-    @Override
     public boolean hasFinishedOperation(World world) {
-        boolean result=true;
-        for (Construct construct : modules) {
-            if (construct instanceof Machinery) {
-                result = result && ((Machinery)construct).hasFinishedOperation(world);
-            }
-        }
-        return result;
+        return  drill.hasFinishedOperation(world);
     }
 
-    @Override
     public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
-        boolean canMove=true;
+        boolean canMove = true;
         for (BlockPos blockPos : blockPosList) {
             BlockPos newPos = blockPos.offset(facing, step);
             canMove = canMove && (GeneralUtils.canBlockBeReplaced(world, newPos)
-                                    || blockPosList.contains(newPos));
+                    || blockPosList.contains(newPos));
         }
-        return canMove && this.engine.canMove(world, facing, step, blockPosList) && this.getRails().canMove(world, facing, step, blockPosList); //TODO: remove the canMove method. it makes no sense
+        return canMove && this.getRails().hasSupport(world, facing, step, blockPosList);
     }
 
-    @Override
     public boolean isValidStructure(World world) {
         return engine.isValidStructure(world)
                 && getRails().isValidStructure(world);
@@ -132,13 +151,13 @@ class PoweredConstruct implements Machinery {
         BlockPos newPos = pos.offset(facing, step);
         IBlockState state = world.getBlockState(pos);
         TileEntity tileEntity = world.getTileEntity(pos);
-        ItemStack[] stackInSlot=null;
-        if (tileEntity!=null && tileEntity instanceof IInventory) {
+        ItemStack[] stackInSlot = null;
+        if (tileEntity != null && tileEntity instanceof IInventory) {
             world.removeTileEntity(pos);
             IInventory inventory = (IInventory) tileEntity;
-            stackInSlot=new ItemStack[inventory.getSizeInventory()];
+            stackInSlot = new ItemStack[inventory.getSizeInventory()];
             for (int i = 0; i < stackInSlot.length; i++) {
-                stackInSlot[i]=inventory.getStackInSlot(i);
+                stackInSlot[i] = inventory.getStackInSlot(i);
             }
         }
         doWeirdLeverFix(world, newPos, state);
@@ -146,10 +165,10 @@ class PoweredConstruct implements Machinery {
         world.setBlockToAir(pos);
         world.setBlockState(newPos, state);
 
-        if (stackInSlot!=null) {
-            IInventory entity = (IInventory)world.getTileEntity(newPos);
+        if (stackInSlot != null) {
+            IInventory entity = (IInventory) world.getTileEntity(newPos);
             for (int i = 0; i < stackInSlot.length; i++) {
-                entity.setInventorySlotContents(i,stackInSlot[i]);
+                entity.setInventorySlotContents(i, stackInSlot[i]);
             }
         }
 
@@ -169,13 +188,11 @@ class PoweredConstruct implements Machinery {
         }
     }
 
-    @Override
     public void readFromNBT(NBTTagCompound compound) {
         engine.readFromNBT(compound);
         getRails().readFromNBT(compound);
     }
 
-    @Override
     public void writeToNBT(NBTTagCompound compound) {
         engine.writeToNBT(compound);
         getRails().writeToNBT(compound);
@@ -183,11 +200,9 @@ class PoweredConstruct implements Machinery {
     }
 
 
-    public void performOperation(World world) {
-        for (Construct construct : modules) {
-            if (construct instanceof Machinery) {
-                ((Machinery)construct).performOperation(world);
-            }
+    public void performOperation(World world, int tick) {
+        if (drill!= null) {
+            this.drill.performOperation(world, tick);
         }
     }
 }

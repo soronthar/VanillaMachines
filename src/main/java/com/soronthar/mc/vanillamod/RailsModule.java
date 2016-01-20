@@ -15,9 +15,6 @@ class RailsModule implements Construct{
     private BlockPos[] rails;
     EnumFacing facing;
 
-
-
-
     public static Block getRailsBlock() {
         return Blocks.planks;
     }
@@ -58,11 +55,6 @@ class RailsModule implements Construct{
         return railsModule;
     }
 
-
-    @Override
-    public void powerOff(World world) {
-    }
-
     public void readFromNBT(NBTTagCompound compound) {
         NBTTagCompound tag = compound.getCompoundTag("railsModule");
         this.facing=EnumFacing.getFront(tag.getInteger("railsFacing"));
@@ -85,8 +77,7 @@ class RailsModule implements Construct{
         return Arrays.asList(rails);
     }
 
-    @Override
-    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
+    public boolean hasSupport(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
         boolean canMove=true;
         for (BlockPos rail : rails) {
             BlockPos newPos = rail.offset(facing, step);
@@ -100,7 +91,7 @@ class RailsModule implements Construct{
     @Override
     public void move(World world, EnumFacing facing, int step) {
         for (int i = 0; i < rails.length; i++) {
-            rails[i] = PoweredConstruct.moveBlock(world, rails[i], facing, step);
+            rails[i] = MovingMachine.moveBlock(world, rails[i], facing, step);
 
         }
 

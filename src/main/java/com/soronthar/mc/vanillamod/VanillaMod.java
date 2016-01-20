@@ -49,9 +49,9 @@ public class VanillaMod {
                 IBlockState blockState = world.getBlockState(activatorPos);
                 Block activatorBlock = blockState.getBlock();
                 if (activatorBlock.equals(EngineModule.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
-                    PoweredConstruct construct= PoweredConstruct.detectPoweredConstruct(world, activatorPos);
+                    MovingMachine construct= MovingMachine.detectPoweredConstruct(world, activatorPos);
                     if (construct!=null) {
-                        PoweredConstructEntity entity = new PoweredConstructEntity(construct);
+                        MovingMachineEntity entity = new MovingMachineEntity(construct);
                         world.setTileEntity(activatorPos, entity);
                     }
                 }

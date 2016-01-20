@@ -4,7 +4,6 @@ import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -16,7 +15,6 @@ public class SmallDrillModule implements Drill {
     BlockPos drillHeadPos;
     BlockPos[] drillArea=new BlockPos[9];
     int currentDrillCell=0;
-    private boolean canMove = true;
 
     public SmallDrillModule(BlockPos drillHeadPos, EnumFacing facing) {
         this.drillHeadPos = drillHeadPos;
@@ -57,7 +55,7 @@ public class SmallDrillModule implements Drill {
     }
 
     @Override
-    public void performOperation(World world) {
+    public void performOperation(World world, int tick) {
         while(this.currentDrillCell<this.drillArea.length && (world.isAirBlock(getCurrentDrillBlock()) || GeneralUtils.isLiquid(world,getCurrentDrillBlock()))) {
             this.currentDrillCell++;
         }
@@ -69,10 +67,6 @@ public class SmallDrillModule implements Drill {
         } else {
             this.currentDrillCell=0;
         }
-    }
-
-    private AxisAlignedBB getDrillAreaAxis() {
-        return new AxisAlignedBB(drillArea[0],drillArea[8]);
     }
 
     private BlockPos getCurrentDrillBlock() {
@@ -89,7 +83,6 @@ public class SmallDrillModule implements Drill {
     public void readFromNBT(NBTTagCompound compound) {
         NBTTagCompound tag = compound.getCompoundTag("smallDrillModule");
         this.drillHeadPos = GeneralUtils.readBlockPosFromNBT(tag, "drillHeadPos");
-        //TODO: facing is actually needed.. what gives...
     }
 
     @Override
@@ -100,18 +93,19 @@ public class SmallDrillModule implements Drill {
     }
 
     @Override
-    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
-        return canMove;
+    public void powerOff(World world) {
+        currentDrillCell=0;
     }
 
-    @Override
-    public void powerOff(World world) {
 
+    @Override
+    public int fuelBurn(World world) {
+        return 1;
     }
 
     @Override
     public void move(World world, EnumFacing facing, int step) {
-        this.drillHeadPos = PoweredConstruct.moveBlock(world, this.drillHeadPos, facing, step);
+        this.drillHeadPos = MovingMachine.moveBlock(world, this.drillHeadPos, facing, step);
         calculateDrillArea(drillHeadPos, facing);
     }
 

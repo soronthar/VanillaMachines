@@ -6,6 +6,6 @@ public interface Machinery extends Construct{
 
     boolean hasFinishedOperation(World world);
 
-    void performOperation(World world);
+    void performOperation(World world, int tick);
 
 }

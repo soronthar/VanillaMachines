@@ -77,12 +77,6 @@ class EngineModule implements Construct {
         return Arrays.asList(controllerPos, activatorPos, propellerPos);
     }
 
-    @Override
-    public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
-        return true;
-    }
-
-
     public void powerOn(World world) {
         if (!GeneralUtils.isBlockInPos(world, this.propellerPos, EngineModule.getPropellerBlockOn())) {
             BlockFurnace.setState(true, world, this.propellerPos);
@@ -97,9 +91,9 @@ class EngineModule implements Construct {
 
     @Override
     public void move(World world, EnumFacing facing, int step) {
-        this.activatorPos = PoweredConstruct.moveBlock(world, this.activatorPos, facing, step);
-        this.controllerPos = PoweredConstruct.moveBlock(world, this.controllerPos, facing, step);
-        this.propellerPos = PoweredConstruct.moveBlock(world, this.propellerPos, facing, step);
+        this.activatorPos = MovingMachine.moveBlock(world, this.activatorPos, facing, step);
+        this.controllerPos = MovingMachine.moveBlock(world, this.controllerPos, facing, step);
+        this.propellerPos = MovingMachine.moveBlock(world, this.propellerPos, facing, step);
     }
 
 

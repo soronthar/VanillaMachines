@@ -18,6 +18,11 @@ import java.util.List;
 
 class PoweredConstruct implements Construct {
     EngineModule engine;
+    RailsModule module;
+    Drill drill;
+    Harvesters harvesters;
+    Deployers deployers;
+
     List<Construct> modules =new ArrayList<Construct>();
 
 

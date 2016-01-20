@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import java.util.Collections;
 import java.util.List;
 
-public class SmallDrillModule implements Construct {
+public class SmallDrillModule implements Drill {
     BlockPos drillHeadPos;
     BlockPos[] drillArea=new BlockPos[9];
     int currentDrillCell=0;

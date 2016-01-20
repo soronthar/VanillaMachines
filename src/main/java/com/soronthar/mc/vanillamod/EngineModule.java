@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-class EngineModule implements Construct {
+public class EngineModule implements Construct {
     BlockPos activatorPos;
     BlockPos controllerPos;
     BlockPos propellerPos;
@@ -85,7 +85,11 @@ class EngineModule implements Construct {
 
     public void powerOff(World world) {
         if (world.getBlockState(this.propellerPos) != null) {
-            BlockFurnace.setState(false, world, this.propellerPos);
+            try {
+                BlockFurnace.setState(false, world, this.propellerPos);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
     }
 

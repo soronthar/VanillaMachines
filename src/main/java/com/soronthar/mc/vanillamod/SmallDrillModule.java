@@ -80,7 +80,7 @@ public class SmallDrillModule implements Drill {
         return GeneralUtils.isBlockInPos(world, this.drillHeadPos, getDrillHeadBlock());
     }
 
-    private static Block getDrillHeadBlock() {
+    public static Block getDrillHeadBlock() {
         return Blocks.iron_block;
     }
 

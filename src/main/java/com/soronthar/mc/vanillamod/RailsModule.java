@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-class RailsModule implements Construct{
+public class RailsModule implements Construct{
     private BlockPos[] rails;
     EnumFacing facing;
 

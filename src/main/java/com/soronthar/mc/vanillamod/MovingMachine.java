@@ -19,9 +19,11 @@ import java.util.List;
 class MovingMachine {
     EngineModule engine;
     RailsModule rails;
-    Drill drill=new Drill() {
+    Drill drill = new Drill() {
         @Override
-        public boolean hasFinishedOperation(World world) { return true; }
+        public boolean hasFinishedOperation(World world) {
+            return true;
+        }
 
         @Override
         public void powerOff(World world) {
@@ -50,7 +52,7 @@ class MovingMachine {
             return 0;
         }
     };
-
+    StorageModule storage;
 
     List<Harvester> harvester = new ArrayList<>();
     List<Deployer> deployer = new ArrayList<>();
@@ -67,8 +69,12 @@ class MovingMachine {
         this.drill = drill;
     }
 
+    private void addStorage(StorageModule storage) {
+        this.storage = storage;
+    }
 
-    public static MovingMachine detectPoweredConstruct(World world, BlockPos activatorPos) {
+
+    public static MovingMachine detectMovingMachine(World world, BlockPos activatorPos) {
         MovingMachine construct = null;
         EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
         if (engine != null) {
@@ -81,11 +87,17 @@ class MovingMachine {
                 if (smallDrillModule != null) {
                     construct.addDrill(smallDrillModule);
                 }
+
+                StorageModule storage = StorageModule.detectStorage(world, engine, railsModule.facing);
+                if (storage != null) {
+                    construct.addStorage(storage);
+                }
             }
 
         }
         return construct;
     }
+
 
     public boolean isValidStructure(World world) {
         return engine.isValidStructure(world)
@@ -112,6 +124,7 @@ class MovingMachine {
         constructBlocks.addAll(this.engine.getBlockPosList());
         constructBlocks.addAll(this.rails.getBlockPosList());
         constructBlocks.addAll(this.drill.getBlockPosList());
+        constructBlocks.addAll(this.storage.getBlockPosList());
         return constructBlocks;
     }
 
@@ -122,7 +135,8 @@ class MovingMachine {
             drill.move(world, facing, step);
             engine.move(world, facing, step);
             rails.move(world, facing, step);
-            engine.burnFuel(world, blockPosList.size()+drill.fuelBurn(world));
+            storage.move(world, facing, step);
+            engine.burnFuel(world, blockPosList.size() + drill.fuelBurn(world));
 
             return true;
         } else {
@@ -177,7 +191,7 @@ class MovingMachine {
     }
 
     public void performOperation(World world, int tick) {
-        if (drill!= null) {
+        if (drill != null) {
             this.drill.performOperation(world, tick);
         }
     }

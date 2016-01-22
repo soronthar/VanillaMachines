@@ -156,7 +156,7 @@ class MovingMachine {
             engine.move(world, facing, step);
             rails.move(world, facing, step);
             storage.move(world, facing, step);
-            engine.burnFuel(world, blockPosList.size() + drill.fuelBurn(world));
+            engine.burnFuel(world, blockPosList.size());
 
             return true;
         } else {
@@ -213,6 +213,7 @@ class MovingMachine {
     public void performOperation(World world, int tick) {
         if (drill != null) {
             this.drill.performOperation(world, tick);
+            engine.burnFuel(world, this.drill.fuelBurn(world));
         }
     }
 }

@@ -49,25 +49,30 @@ public class SpawnSmallDrillerCommand implements ICommand{
             Entity entity = sender.getCommandSenderEntity();
             EnumFacing facing = entity.getHorizontalFacing();
 
-            BlockPos anchor = entity.getPosition().offset(facing, 3);
+            BlockPos propellerPos = entity.getPosition().offset(facing, 3);
+            BlockPos controllerPos = propellerPos.up();
+            EnumFacing facingRight = facing.rotateY();
+            EnumFacing facingLeft = facing.rotateYCCW();
+            EnumFacing facingOpposite = facing.getOpposite();
 
-            world.setBlockState(anchor, EngineModule.getPropellerBlockOff().getDefaultState());
-            TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(anchor);
-            furnace.setInventorySlotContents(1,new ItemStack(Items.stick,64));
+            world.setBlockState(propellerPos, EngineModule.getPropellerBlockOff().getDefaultState());
+            TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
+            furnace.setInventorySlotContents(1, new ItemStack(Items.stick, 64));
 
-            world.setBlockState(anchor.up(), EngineModule.getControllerBlock().getDefaultState());
-            world.setBlockState(anchor.up().up(), EngineModule.getActivatorBlock().getDefaultState().withProperty(BlockLever.FACING, BlockLever.EnumOrientation.forFacings(EnumFacing.UP, facing)));
-            world.setBlockState(anchor.offset(facing.rotateY()), RailsModule.getRailsBlock().getDefaultState());
-            world.setBlockState(anchor.offset(facing.rotateY()).offset(facing.getOpposite()), RailsModule.getRailsBlock().getDefaultState());
-            world.setBlockState(anchor.offset(facing.rotateYCCW()), RailsModule.getRailsBlock().getDefaultState());
-            world.setBlockState(anchor.offset(facing.rotateYCCW()).offset(facing.getOpposite()), RailsModule.getRailsBlock().getDefaultState());
+            world.setBlockState(controllerPos, EngineModule.getControllerBlock().getDefaultState());
+            world.setBlockState(controllerPos.offset(facingOpposite), Blocks.chest.getDefaultState());
+            world.setBlockState(controllerPos.up(), EngineModule.getActivatorBlock().getDefaultState().withProperty(BlockLever.FACING, BlockLever.EnumOrientation.forFacings(EnumFacing.UP, facing)));
+            world.setBlockState(propellerPos.offset(facingRight), RailsModule.getRailsBlock().getDefaultState());
+            world.setBlockState(propellerPos.offset(facingRight).offset(facingOpposite), RailsModule.getRailsBlock().getDefaultState());
+            world.setBlockState(propellerPos.offset(facingLeft), RailsModule.getRailsBlock().getDefaultState());
+            world.setBlockState(propellerPos.offset(facingLeft).offset(facingOpposite), RailsModule.getRailsBlock().getDefaultState());
 
-            world.setBlockState(anchor.up().offset(facing), SmallDrillModule.getDrillHeadBlock().getDefaultState());
+            world.setBlockState(controllerPos.offset(facing), SmallDrillModule.getDrillHeadBlock().getDefaultState());
 
             if (buildTest) {
-                BlockPos testAnchor=anchor.offset(facing,3).up();
-                BlockPos testAnchorLeft=testAnchor.offset(facing.rotateY());
-                BlockPos testAnchorRight=testAnchor.offset(facing.rotateYCCW());
+                BlockPos testAnchor=propellerPos.offset(facing,3).up();
+                BlockPos testAnchorLeft=testAnchor.offset(facingRight);
+                BlockPos testAnchorRight=testAnchor.offset(facingLeft);
 
 
                 world.setBlockState(testAnchor.down(), Blocks.glass.getDefaultState());

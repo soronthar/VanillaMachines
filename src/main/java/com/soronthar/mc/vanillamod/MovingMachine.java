@@ -19,6 +19,7 @@ import java.util.List;
 class MovingMachine {
     EngineModule engine;
     RailsModule rails;
+    //TODO remove these hacks that prevents NPE
     Drill drill = new Drill() {
         @Override
         public boolean hasFinishedOperation(World world) {
@@ -52,7 +53,21 @@ class MovingMachine {
             return 0;
         }
     };
-    StorageModule storage;
+    StorageModule storage = new StorageModule(null) {
+        @Override
+        public boolean isValidStructure(World world) {
+            return true;
+        }
+
+        @Override
+        public void move(World world, EnumFacing facing, int step) {
+        }
+
+        @Override
+        public List<BlockPos> getBlockPosList() {
+            return Collections.emptyList();
+        }
+    };
 
     List<Harvester> harvester = new ArrayList<>();
     List<Deployer> deployer = new ArrayList<>();
@@ -123,8 +138,13 @@ class MovingMachine {
         List<BlockPos> constructBlocks = new ArrayList<BlockPos>();
         constructBlocks.addAll(this.engine.getBlockPosList());
         constructBlocks.addAll(this.rails.getBlockPosList());
-        constructBlocks.addAll(this.drill.getBlockPosList());
-        constructBlocks.addAll(this.storage.getBlockPosList());
+
+        if (this.drill!=null) {
+            constructBlocks.addAll(this.drill.getBlockPosList());
+        }
+        if (this.storage!=null) {
+            constructBlocks.addAll(this.storage.getBlockPosList());
+        }
         return constructBlocks;
     }
 

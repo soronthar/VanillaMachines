@@ -100,6 +100,9 @@ class MovingMachine {
         this.storage.setMachine(this);
     }
 
+    public boolean hasStorage() {
+        return this.storage!=null;
+    }
 
     public static MovingMachine detectMovingMachine(World world, BlockPos activatorPos) {
         MovingMachine construct = null;
@@ -217,6 +220,10 @@ class MovingMachine {
         }
     }
 
+    public void addToStorage(World world, List<ItemStack> drops) {
+        this.storage.addToStorage(world,drops);
+    }
+
 
     public boolean hasFinishedOperation(World world) {
         return drill.hasFinishedOperation(world);
@@ -228,4 +235,5 @@ class MovingMachine {
             engine.burnFuel(world, this.drill.fuelBurn(world));
         }
     }
+
 }

@@ -69,8 +69,13 @@ public class SmallDrillModule implements Drill {
 
         if (this.currentDrillCell<this.drillArea.length) {
             IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
-            blockState.getBlock().dropBlockAsItem(world, getCurrentDrillBlock(), blockState, 0);
+            if (this.machine.hasStorage()) {
+                this.machine.addToStorage(world,blockState.getBlock().getDrops(world, getCurrentDrillBlock(),blockState,0 ));
+            } else {
+                blockState.getBlock().dropBlockAsItem(world, getCurrentDrillBlock(), blockState, 0);
+            }
             world.destroyBlock(getCurrentDrillBlock(),false);
+
         } else {
             this.currentDrillCell=0;
         }
@@ -105,6 +110,7 @@ public class SmallDrillModule implements Drill {
     public void move(World world, EnumFacing facing, int step) {
         this.drillHeadPos = MovingMachine.moveBlock(world, this.drillHeadPos, facing, step);
         calculateDrillArea(drillHeadPos, facing);
+        currentDrillCell=0;
     }
 
     private void calculateDrillArea(BlockPos drillHeadPos, EnumFacing facing) {

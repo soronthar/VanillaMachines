@@ -3,9 +3,8 @@ package com.soronthar.mc.vanillamod.commands;
 import com.soronthar.mc.vanillamod.EngineModule;
 import com.soronthar.mc.vanillamod.RailsModule;
 import com.soronthar.mc.vanillamod.SmallDrillModule;
-import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
-import net.minecraft.block.BlockRailBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -13,14 +12,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,39 +71,47 @@ public class SpawnSmallDrillerCommand implements ICommand{
                 BlockPos testAnchorLeft=testAnchor.offset(facingRight);
                 BlockPos testAnchorRight=testAnchor.offset(facingLeft);
 
+                BlockPos[] pos = calculateTestBlockPosArray(testAnchor, testAnchorLeft, testAnchorRight);
 
-                world.setBlockState(testAnchor.down(), Blocks.glass.getDefaultState());
-                world.setBlockState(testAnchorLeft.down(), Blocks.cobblestone.getDefaultState());
-                world.setBlockState(testAnchorRight.down(), Blocks.iron_block.getDefaultState());
-                world.setBlockState(testAnchorLeft,Blocks.iron_bars.getDefaultState());
-                world.setBlockState(testAnchor,Blocks.planks.getDefaultState());
-                world.setBlockState(testAnchorRight, Blocks.redstone_ore.getDefaultState());
-                world.setBlockState(testAnchorLeft.up(), Blocks.iron_ore.getDefaultState());
-                world.setBlockState(testAnchor.up(), Blocks.furnace.getDefaultState());
-                world.setBlockState(testAnchorRight.up(), Blocks.piston.getDefaultState());
-
+                placeTestBlockArray(world, pos, Blocks.glass,     Blocks.cobblestone, Blocks.iron_block,
+                                                Blocks.iron_bars, Blocks.planks,      Blocks.redstone_ore,
+                                                Blocks.iron_ore,  Blocks.furnace,     Blocks.piston);
 
                 testAnchor=testAnchor.offset(facing);
                 testAnchorLeft=testAnchorLeft.offset(facing);
                 testAnchorRight=testAnchorRight.offset(facing);
 
-                world.setBlockState(testAnchor.down(), Blocks.sand.getDefaultState());
-                world.setBlockState(testAnchorLeft.down(), Blocks.sand.getDefaultState());
-                world.setBlockState(testAnchorRight.down(), Blocks.sand.getDefaultState());
-                world.setBlockState(testAnchorLeft,Blocks.sand.getDefaultState());
-                world.setBlockState(testAnchor,Blocks.sand.getDefaultState());
-                world.setBlockState(testAnchorRight, Blocks.gravel.getDefaultState());
-                world.setBlockState(testAnchorLeft.up(), Blocks.gravel.getDefaultState());
-                world.setBlockState(testAnchor.up(), Blocks.gravel.getDefaultState());
-                world.setBlockState(testAnchorRight.up(), Blocks.gravel.getDefaultState());
+                pos = calculateTestBlockPosArray(testAnchor, testAnchorLeft, testAnchorRight);
 
-
-
+                placeTestBlockArray(world, pos, Blocks.sand, Blocks.sand, Blocks.sand,
+                                                Blocks.sand, Blocks.sand, Blocks.gravel,
+                                                Blocks.gravel, Blocks.gravel, Blocks.gravel);
 
             }
 
         }
     }
+
+    private void placeTestBlockArray(World world, BlockPos[] pos, Block... blocks) {
+        for (int i = 0; i < blocks.length; i++) {
+            world.setBlockState(pos[i], blocks[i].getDefaultState());
+        }
+    }
+
+    private BlockPos[] calculateTestBlockPosArray(BlockPos testAnchor, BlockPos testAnchorLeft, BlockPos testAnchorRight) {
+        return new BlockPos[]{
+                            testAnchor.down(),
+                            testAnchorLeft.down(),
+                            testAnchorRight.down(),
+                            testAnchorLeft,
+                            testAnchor,
+                            testAnchorRight,
+                            testAnchorLeft.up(),
+                            testAnchor.up(),
+                            testAnchorRight.up(),
+                    };
+    }
+
 
     @Override
     public List<String> getCommandAliases() {

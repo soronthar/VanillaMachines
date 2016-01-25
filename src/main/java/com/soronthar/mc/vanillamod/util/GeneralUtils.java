@@ -4,14 +4,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockMushroom;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.Random;
 
 public class GeneralUtils {
     public static EnumFacing findBlockAround(World world, BlockPos pos, Block block) {
@@ -58,5 +63,37 @@ public class GeneralUtils {
 
     public static boolean isLiquid(World world, BlockPos pos) {
         return world.getBlockState(pos).getBlock().getMaterial().isLiquid();
+    }
+
+    public static void eject(ItemStack itemstack, World world, BlockPos pos) {
+        if (itemstack != null) {
+            Random random = new Random();
+
+            float xCoord=pos.getX();
+            float yCoord=pos.getY();
+            float zCoord=pos.getZ();
+
+            float f = random.nextFloat() * 0.8F + 0.1F;
+            float f1 = random.nextFloat() * 0.8F + 0.1F;
+            float f2 = random.nextFloat() * 0.8F + 0.1F;
+            float f3 = 0.05F;
+            int i1 = itemstack.stackSize;
+            EntityItem entityitem = new EntityItem(world, xCoord + f, yCoord + 1 + f1, zCoord + f2,
+                    new ItemStack(itemstack.getItem(), i1, itemstack.getItemDamage()));
+            entityitem.motionX = (float) random.nextGaussian() * f3;
+            entityitem.motionY = (float) random.nextGaussian() * f3 + 0.2F;
+            entityitem.motionZ = (float) random.nextGaussian() * f3;
+            if (itemstack.hasTagCompound()) {
+                entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
+            }
+            world.spawnEntityInWorld(entityitem);
+        }
+    }
+
+    public static void eject(World world, List<ItemStack> drops, BlockPos pos) {
+        for (ItemStack itemStack : drops) {
+            GeneralUtils.eject(itemStack, world, pos);
+        }
+
     }
 }

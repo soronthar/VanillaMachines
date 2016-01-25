@@ -49,6 +49,10 @@ class MovingMachine {
         }
 
         @Override
+        public void setMachine(MovingMachine machine) {
+        }
+
+        @Override
         public int fuelBurn(World world) {
             return 0;
         }
@@ -67,6 +71,10 @@ class MovingMachine {
         public List<BlockPos> getBlockPosList() {
             return Collections.emptyList();
         }
+
+        @Override
+        public void setMachine(MovingMachine machine) {
+        }
     };
 
     List<Harvester> harvester = new ArrayList<>();
@@ -78,14 +86,18 @@ class MovingMachine {
     public MovingMachine(EngineModule engine, RailsModule rails) {
         this.engine = engine;
         this.rails = rails;
+        this.engine.setMachine(this);
+        this.rails.setMachine(this);
     }
 
     private void addDrill(Drill drill) {
         this.drill = drill;
+        this.drill.setMachine(this);
     }
 
     private void addStorage(StorageModule storage) {
         this.storage = storage;
+        this.storage.setMachine(this);
     }
 
 

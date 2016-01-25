@@ -3,7 +3,6 @@ package com.soronthar.mc.vanillamod;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -11,7 +10,8 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-public class RailsModule implements Construct{
+public class RailsModule implements Module {
+    private MovingMachine machine;
     private BlockPos[] rails;
     EnumFacing facing;
 
@@ -25,6 +25,11 @@ public class RailsModule implements Construct{
     private RailsModule(BlockPos[] rails, EnumFacing facing) {
         this.rails = rails;
         this.facing = facing;
+    }
+
+    @Override
+    public void setMachine(MovingMachine machine) {
+        this.machine=machine;
     }
 
     public static RailsModule detectRailModule(World world, BlockPos propellerPos) {

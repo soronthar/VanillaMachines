@@ -9,8 +9,9 @@ import net.minecraft.world.World;
 import java.util.Collections;
 import java.util.List;
 
-public class StorageModule implements Construct{
+public class StorageModule implements Module {
     BlockPos chestPos;
+    private MovingMachine machine;
 
     public StorageModule(BlockPos chestPos) {
         this.chestPos=chestPos;
@@ -26,6 +27,11 @@ public class StorageModule implements Construct{
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void setMachine(MovingMachine machine) {
+        this.machine=machine;
     }
 
     @Override

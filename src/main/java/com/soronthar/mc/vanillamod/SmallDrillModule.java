@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SmallDrillModule implements Drill {
+    private MovingMachine machine   ;
     BlockPos drillHeadPos;
     BlockPos[] drillArea=new BlockPos[9];
     int currentDrillCell=0;
@@ -30,6 +31,11 @@ public class SmallDrillModule implements Drill {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void setMachine(MovingMachine machine) {
+        this.machine=machine;
     }
 
     @Override

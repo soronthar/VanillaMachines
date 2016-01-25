@@ -6,7 +6,6 @@ import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -15,11 +14,13 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-public class EngineModule implements Construct {
+public class EngineModule implements Module {
+    private MovingMachine machine;
+
     BlockPos activatorPos;
     BlockPos controllerPos;
-    BlockPos propellerPos;
 
+    BlockPos propellerPos;
     int burnTimeLeft = 0;
 
     public EngineModule() {
@@ -75,6 +76,11 @@ public class EngineModule implements Construct {
     @Override
     public List<BlockPos> getBlockPosList() {
         return Arrays.asList(controllerPos, activatorPos, propellerPos);
+    }
+
+    @Override
+    public void setMachine(MovingMachine machine) {
+        this.machine=machine;
     }
 
     public void powerOn(World world) {

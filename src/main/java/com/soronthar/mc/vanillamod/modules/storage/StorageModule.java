@@ -1,6 +1,5 @@
 package com.soronthar.mc.vanillamod.modules.storage;
 
-import com.soronthar.mc.vanillamod.EngineModule;
 import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.Storage;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;

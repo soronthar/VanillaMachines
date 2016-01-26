@@ -1,6 +1,7 @@
 package com.soronthar.mc.vanillamod;
 
 import com.soronthar.mc.vanillamod.commands.SpawnSmallDrillerCommand;
+import com.soronthar.mc.vanillamod.modules.EngineModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

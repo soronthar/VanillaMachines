@@ -1,6 +1,6 @@
 package com.soronthar.mc.vanillamod.modules.storage;
 
-import com.soronthar.mc.vanillamod.EngineModule;
+import com.soronthar.mc.vanillamod.modules.EngineModule;
 import com.soronthar.mc.vanillamod.Storage;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.init.Blocks;

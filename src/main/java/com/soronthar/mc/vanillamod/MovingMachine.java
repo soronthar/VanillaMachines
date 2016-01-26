@@ -1,8 +1,9 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.modules.EngineModule;
 import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
+import com.soronthar.mc.vanillamod.modules.RailsModule;
 import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
-import com.soronthar.mc.vanillamod.modules.storage.StorageModule;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
@@ -15,14 +16,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
 public class MovingMachine {
     EngineModule engine;
     RailsModule rails;
-    //TODO remove these hacks that prevents NPE
     Drill drill;
     Storage storage;
 
@@ -107,13 +106,8 @@ public class MovingMachine {
         List<BlockPos> constructBlocks = new ArrayList<BlockPos>();
         constructBlocks.addAll(this.engine.getBlockPosList());
         constructBlocks.addAll(this.rails.getBlockPosList());
-
-        if (this.drill!=null) {
-            constructBlocks.addAll(this.drill.getBlockPosList());
-        }
-        if (this.storage!=null) {
-            constructBlocks.addAll(this.storage.getBlockPosList());
-        }
+        constructBlocks.addAll(this.drill.getBlockPosList());
+        constructBlocks.addAll(this.storage.getBlockPosList());
         return constructBlocks;
     }
 

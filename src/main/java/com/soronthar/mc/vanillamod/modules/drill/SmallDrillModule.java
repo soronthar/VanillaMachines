@@ -16,10 +16,10 @@ import java.util.List;
 //TODO power off if there is no more space in the storage.
 
 public class SmallDrillModule implements Drill {
-    private MovingMachine machine   ;
+    private MovingMachine machine;
     BlockPos drillHeadPos;
-    BlockPos[] drillArea=new BlockPos[9];
-    int currentDrillCell=0;
+    BlockPos[] drillArea = new BlockPos[9];
+    int currentDrillCell = 0;
 
     public SmallDrillModule(BlockPos drillHeadPos, EnumFacing facing) {
         this.drillHeadPos = drillHeadPos;
@@ -29,7 +29,7 @@ public class SmallDrillModule implements Drill {
 
     @Override
     public void setMachine(MovingMachine machine) {
-        this.machine=machine;
+        this.machine = machine;
     }
 
     @Override
@@ -57,21 +57,16 @@ public class SmallDrillModule implements Drill {
 
     @Override
     public void performOperation(World world, int tick) {
-        while(this.currentDrillCell<this.drillArea.length && (world.isAirBlock(getCurrentDrillBlock()) || GeneralUtils.isLiquid(world,getCurrentDrillBlock()))) {
+        while (this.currentDrillCell < this.drillArea.length && (world.isAirBlock(getCurrentDrillBlock()) || GeneralUtils.isLiquid(world, getCurrentDrillBlock()))) {
             this.currentDrillCell++;
         }
 
-        if (this.currentDrillCell<this.drillArea.length) {
+        if (this.currentDrillCell < this.drillArea.length) {
             IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
-//            if (this.machine.hasStorage()) {
-                this.machine.addToStorage(world,blockState.getBlock().getDrops(world, getCurrentDrillBlock(),blockState,0 ));
-//            } else {
-//                blockState.getBlock().dropBlockAsItem(world, getCurrentDrillBlock(), blockState, 0);
-//            }
+            this.machine.addToStorage(world, blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
             world.destroyBlock(getCurrentDrillBlock(), false);
-
         } else {
-            this.currentDrillCell=0;
+            this.currentDrillCell = 0;
         }
     }
 
@@ -87,7 +82,7 @@ public class SmallDrillModule implements Drill {
 
     @Override
     public void powerOff(World world) {
-        currentDrillCell=0;
+        currentDrillCell = 0;
     }
 
 
@@ -100,13 +95,13 @@ public class SmallDrillModule implements Drill {
     public void move(World world, EnumFacing facing, int step) {
         this.drillHeadPos = MovingMachine.moveBlock(world, this.drillHeadPos, facing, step);
         calculateDrillArea(drillHeadPos, facing);
-        currentDrillCell=0;
+        currentDrillCell = 0;
     }
 
     private void calculateDrillArea(BlockPos drillHeadPos, EnumFacing facing) {
         BlockPos drillAnchor = drillHeadPos.offset(facing);
-        BlockPos anchorLeft=drillAnchor.offset(facing.rotateYCCW());
-        BlockPos anchorRight=drillAnchor.offset(facing.rotateY());
+        BlockPos anchorLeft = drillAnchor.offset(facing.rotateYCCW());
+        BlockPos anchorRight = drillAnchor.offset(facing.rotateY());
         this.drillArea[0] = anchorLeft.down();
         this.drillArea[1] = drillAnchor.down();
         this.drillArea[2] = anchorRight.down();

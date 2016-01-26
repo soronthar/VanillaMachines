@@ -1,5 +1,7 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamod.modules;
 
+import com.soronthar.mc.vanillamod.Module;
+import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
@@ -17,10 +19,10 @@ import java.util.List;
 public class EngineModule implements Module {
     private MovingMachine machine;
 
-    BlockPos activatorPos;
+    public BlockPos activatorPos;
     public BlockPos controllerPos;
 
-    BlockPos propellerPos;
+    public BlockPos propellerPos;
     int burnTimeLeft = 0;
 
     public EngineModule() {

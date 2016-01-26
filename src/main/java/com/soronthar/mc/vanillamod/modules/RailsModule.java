@@ -1,5 +1,7 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamod.modules;
 
+import com.soronthar.mc.vanillamod.Module;
+import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -13,7 +15,7 @@ import java.util.List;
 public class RailsModule implements Module {
     private MovingMachine machine;
     private BlockPos[] rails;
-    EnumFacing facing;
+    public EnumFacing facing;
 
     public static Block getRailsBlock() {
         return Blocks.planks;

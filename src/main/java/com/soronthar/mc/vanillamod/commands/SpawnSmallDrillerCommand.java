@@ -1,8 +1,8 @@
 package com.soronthar.mc.vanillamod.commands;
 
 import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
-import com.soronthar.mc.vanillamod.EngineModule;
-import com.soronthar.mc.vanillamod.RailsModule;
+import com.soronthar.mc.vanillamod.modules.EngineModule;
+import com.soronthar.mc.vanillamod.modules.RailsModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
 import net.minecraft.command.CommandException;

@@ -27,7 +27,7 @@ public class SmallDrillModule implements Drill {
     }
 
 
-    public static SmallDrillModule detect(World world, BlockPos controllerPos, EnumFacing facing) {
+    public static Drill detect(World world, BlockPos controllerPos, EnumFacing facing) {
         BlockPos drillHeadPos = controllerPos.offset(facing);
         if (GeneralUtils.isBlockInPos(world, drillHeadPos, getDrillHeadBlock())) {
             return new SmallDrillModule(drillHeadPos, facing);

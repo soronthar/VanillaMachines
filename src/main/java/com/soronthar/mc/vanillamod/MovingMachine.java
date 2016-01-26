@@ -114,9 +114,9 @@ class MovingMachine {
 
             if (railsModule != null) {
                 construct = new MovingMachine(engine, railsModule);
-                SmallDrillModule smallDrillModule = SmallDrillModule.detect(world, engine.controllerPos, railsModule.facing);
-                if (smallDrillModule != null) {
-                    construct.addDrill(smallDrillModule);
+                Drill drill = SmallDrillModule.detect(world, engine.controllerPos, railsModule.facing);
+                if (drill != null) {
+                    construct.addDrill(drill);
                 }
 
                 StorageModule storage = StorageModule.detectStorage(world, engine, railsModule.facing);

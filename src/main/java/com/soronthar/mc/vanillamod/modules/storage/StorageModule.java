@@ -52,7 +52,9 @@ public class StorageModule implements Storage {
         return placed;
     }
 
-    private boolean addToStorage(World world, ItemStack itemstack) {
+
+    //TODO: Partial itemstack.. if there is a slot with 16 and a stack is added, add 48 and set the rest in another slot.
+    public boolean addToStorage(World world, ItemStack itemstack) {
         boolean placed=false;
         TileEntity tileEntity = world.getTileEntity(chestPos);
         if (tileEntity instanceof IInventory) {

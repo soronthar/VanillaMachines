@@ -4,6 +4,9 @@ import com.soronthar.mc.vanillamod.Drill;
 import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -11,8 +14,6 @@ import net.minecraft.world.World;
 import java.util.Collections;
 import java.util.List;
 
-
-//TODO drill entities with inventories
 
 public class SmallDrillModule implements Drill {
     private MovingMachine machine;
@@ -73,6 +74,18 @@ public class SmallDrillModule implements Drill {
     private boolean drill(World world) {
         IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
         boolean added = this.machine.storage.addToStorage(world, blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
+        TileEntity entity = world.getTileEntity(getCurrentDrillBlock());
+        if (entity!=null && entity instanceof IInventory) {
+            IInventory inventory= (IInventory) entity;
+            int sizeInventory = inventory.getSizeInventory();
+            for (int i = 0; i < sizeInventory; i++) {
+                ItemStack stackInSlot = inventory.removeStackFromSlot(i);
+                if (stackInSlot!=null) {
+                    added = added &&  this.machine.storage.addToStorage(world,stackInSlot);
+                }
+            }
+
+        }
         world.destroyBlock(getCurrentDrillBlock(), false);
         return added;
     }

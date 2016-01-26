@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 //TODO: Persist the entity..somehow.
 //TODO: the construct should have a reference to the world.
 public class MovingMachineEntity extends TileEntity implements ITickable {
-
     MovingMachine movingMachine;
     int tick;
 

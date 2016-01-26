@@ -43,4 +43,10 @@ public class EjectStorage implements Storage {
     @Override
     public void setMachine(MovingMachine machine) {
     }
+
+    @Override
+    public boolean addToStorage(World world, ItemStack itemstack) {
+        GeneralUtils.eject(itemstack, world, this.ejectPos);
+        return true;
+    }
 }

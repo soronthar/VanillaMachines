@@ -10,7 +10,16 @@ public interface Storage extends Module {
      *
      * @param world
      * @param drops
-     * @return True if all the drops could be placed in the inventory
+     * @return True if all the itemstack could be placed in the inventory
      */
     boolean addToStorage(World world, List<ItemStack> drops);
+
+
+    /**
+     *
+     * @param world
+     * @param drops
+     * @return True if the itemstack could be placed in the inventory
+     */
+    boolean addToStorage(World world, ItemStack itemstack);
 }

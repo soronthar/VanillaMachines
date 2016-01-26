@@ -90,7 +90,7 @@ public class GeneralUtils {
         }
     }
 
-    public static void eject(World world, List<ItemStack> drops, BlockPos pos) {
+    public static void eject(List<ItemStack> drops, World world, BlockPos pos) {
         for (ItemStack itemStack : drops) {
             GeneralUtils.eject(itemStack, world, pos);
         }

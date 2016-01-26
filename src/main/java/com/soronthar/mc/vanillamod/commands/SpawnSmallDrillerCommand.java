@@ -1,8 +1,8 @@
 package com.soronthar.mc.vanillamod.commands;
 
+import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
 import com.soronthar.mc.vanillamod.EngineModule;
 import com.soronthar.mc.vanillamod.RailsModule;
-import com.soronthar.mc.vanillamod.SmallDrillModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
 import net.minecraft.command.CommandException;
@@ -64,7 +64,7 @@ public class SpawnSmallDrillerCommand implements ICommand{
             world.setBlockState(propellerPos.offset(facingLeft), RailsModule.getRailsBlock().getDefaultState());
             world.setBlockState(propellerPos.offset(facingLeft).offset(facingOpposite), RailsModule.getRailsBlock().getDefaultState());
 
-            world.setBlockState(controllerPos.offset(facing), SmallDrillModule.getDrillHeadBlock().getDefaultState());
+            world.setBlockState(controllerPos.offset(facing), DrillBlueprint.getDrillHeadBlock().getDefaultState());
 
             if (buildTest) {
                 BlockPos testAnchor=propellerPos.offset(facing,3).up();

@@ -1,7 +1,9 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamod.modules.storage;
 
+import com.soronthar.mc.vanillamod.EngineModule;
+import com.soronthar.mc.vanillamod.MovingMachine;
+import com.soronthar.mc.vanillamod.Storage;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import com.sun.deploy.util.GeneralUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,27 +13,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public class StorageModule implements Module {
+public class StorageModule implements Storage {
     BlockPos chestPos;
     MovingMachine machine;
 
     public StorageModule(BlockPos chestPos) {
         this.chestPos=chestPos;
-    }
-
-    public static StorageModule detectStorage(World world, EngineModule engine, EnumFacing facing) {
-        BlockPos controllerPos = engine.controllerPos;
-
-        BlockPos chestPos = controllerPos.offset(facing.getOpposite());
-
-        if (GeneralUtils.isBlockInPos(world, chestPos, Blocks.chest)) {
-            return new StorageModule(chestPos);
-        } else {
-            return null;
-        }
     }
 
     @Override
@@ -54,6 +43,7 @@ public class StorageModule implements Module {
         return Collections.singletonList(chestPos);
     }
 
+    @Override
     public void addToStorage(World world, List<ItemStack> drops) {
         for (ItemStack itemStack : drops) {
             addToStorage(world, itemStack);

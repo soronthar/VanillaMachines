@@ -1,5 +1,8 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
+import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
+import com.soronthar.mc.vanillamod.modules.storage.StorageModule;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
@@ -16,66 +19,12 @@ import java.util.Collections;
 import java.util.List;
 
 
-class MovingMachine {
+public class MovingMachine {
     EngineModule engine;
     RailsModule rails;
     //TODO remove these hacks that prevents NPE
-    Drill drill = new Drill() {
-        @Override
-        public boolean hasFinishedOperation(World world) {
-            return true;
-        }
-
-        @Override
-        public void powerOff(World world) {
-        }
-
-        @Override
-        public void performOperation(World world, int tick) {
-        }
-
-        @Override
-        public boolean isValidStructure(World world) {
-            return true;
-        }
-
-        @Override
-        public void move(World world, EnumFacing facing, int step) {
-        }
-
-        @Override
-        public List<BlockPos> getBlockPosList() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public void setMachine(MovingMachine machine) {
-        }
-
-        @Override
-        public int fuelBurn(World world) {
-            return 0;
-        }
-    };
-    StorageModule storage = new StorageModule(null) {
-        @Override
-        public boolean isValidStructure(World world) {
-            return true;
-        }
-
-        @Override
-        public void move(World world, EnumFacing facing, int step) {
-        }
-
-        @Override
-        public List<BlockPos> getBlockPosList() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public void setMachine(MovingMachine machine) {
-        }
-    };
+    Drill drill;
+    Storage storage;
 
     List<Harvester> harvester = new ArrayList<>();
     List<Deployer> deployer = new ArrayList<>();
@@ -96,7 +45,7 @@ class MovingMachine {
         this.drill.setMachine(this);
     }
 
-    private void addStorage(StorageModule storage) {
+    private void addStorage(Storage storage) {
         this.storage = storage;
         this.storage.setMachine(this);
     }
@@ -114,15 +63,11 @@ class MovingMachine {
 
             if (railsModule != null) {
                 construct = new MovingMachine(engine, railsModule);
-                Drill drill = SmallDrillModule.detect(world, engine.controllerPos, railsModule.facing);
-                if (drill != null) {
-                    construct.addDrill(drill);
-                }
+                Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsModule.facing);
+                construct.addDrill(drill);
 
-                StorageModule storage = StorageModule.detectStorage(world, engine, railsModule.facing);
-                if (storage != null) {
-                    construct.addStorage(storage);
-                }
+                Storage storage = StorageBlueprint.detectStorage(world, engine, railsModule.facing);
+                construct.addStorage(storage);
             }
 
         }

@@ -18,7 +18,7 @@ public class EngineModule implements Module {
     private MovingMachine machine;
 
     BlockPos activatorPos;
-    BlockPos controllerPos;
+    public BlockPos controllerPos;
 
     BlockPos propellerPos;
     int burnTimeLeft = 0;

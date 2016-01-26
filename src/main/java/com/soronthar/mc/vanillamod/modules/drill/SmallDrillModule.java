@@ -1,9 +1,9 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamod.modules.drill;
 
+import com.soronthar.mc.vanillamod.Drill;
+import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -26,15 +26,6 @@ public class SmallDrillModule implements Drill {
         calculateDrillArea(drillHeadPos, facing);
     }
 
-
-    public static Drill detect(World world, BlockPos controllerPos, EnumFacing facing) {
-        BlockPos drillHeadPos = controllerPos.offset(facing);
-        if (GeneralUtils.isBlockInPos(world, drillHeadPos, getDrillHeadBlock())) {
-            return new SmallDrillModule(drillHeadPos, facing);
-        } else {
-            return null;
-        }
-    }
 
     @Override
     public void setMachine(MovingMachine machine) {
@@ -72,12 +63,12 @@ public class SmallDrillModule implements Drill {
 
         if (this.currentDrillCell<this.drillArea.length) {
             IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
-            if (this.machine.hasStorage()) {
+//            if (this.machine.hasStorage()) {
                 this.machine.addToStorage(world,blockState.getBlock().getDrops(world, getCurrentDrillBlock(),blockState,0 ));
-            } else {
-                blockState.getBlock().dropBlockAsItem(world, getCurrentDrillBlock(), blockState, 0);
-            }
-            world.destroyBlock(getCurrentDrillBlock(),false);
+//            } else {
+//                blockState.getBlock().dropBlockAsItem(world, getCurrentDrillBlock(), blockState, 0);
+//            }
+            world.destroyBlock(getCurrentDrillBlock(), false);
 
         } else {
             this.currentDrillCell=0;
@@ -91,11 +82,7 @@ public class SmallDrillModule implements Drill {
 
     @Override
     public boolean isValidStructure(World world) {
-        return GeneralUtils.isBlockInPos(world, this.drillHeadPos, getDrillHeadBlock());
-    }
-
-    public static Block getDrillHeadBlock() {
-        return Blocks.iron_block;
+        return GeneralUtils.isBlockInPos(world, this.drillHeadPos, DrillBlueprint.getDrillHeadBlock());
     }
 
     @Override

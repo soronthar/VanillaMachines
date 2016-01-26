@@ -20,6 +20,7 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
 
     public MovingMachineEntity(MovingMachine movingMachine) {
         this.movingMachine = movingMachine;
+        this.movingMachine.setEntity(this);
     }
 
     @Override
@@ -56,13 +57,6 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
 
     private void powerOff(BlockPos leverPos) {
         movingMachine.powerOff(getWorld());
-        getWorld().removeTileEntity(leverPos);
-        IBlockState blockState = getWorld().getBlockState(leverPos);
-        if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
-            getWorld().setBlockState(leverPos, blockState.withProperty(BlockLever.POWERED, false));
-            getWorld().markBlockForUpdate(leverPos);
-        }
-        this.invalidate();
     }
 
 

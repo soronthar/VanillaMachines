@@ -1,11 +1,11 @@
 package com.soronthar.mc.vanillamod;
 
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -79,6 +79,7 @@ class MovingMachine {
 
     List<Harvester> harvester = new ArrayList<>();
     List<Deployer> deployer = new ArrayList<>();
+    private MovingMachineEntity entity;
 
     public MovingMachine() {
     }
@@ -137,6 +138,14 @@ class MovingMachine {
     public void powerOff(World world) {
         engine.powerOff(world);
         drill.powerOff(world);
+        world.removeTileEntity(this.engine.activatorPos);
+        IBlockState blockState = world.getBlockState(this.engine.activatorPos);
+        if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
+            world.setBlockState(this.engine.activatorPos, blockState.withProperty(BlockLever.POWERED, false));
+            world.markBlockForUpdate(this.engine.activatorPos);
+        }
+        this.entity.invalidate();
+
     }
 
     public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
@@ -234,6 +243,11 @@ class MovingMachine {
             this.drill.performOperation(world, tick);
             engine.burnFuel(world, this.drill.fuelBurn(world));
         }
+    }
+
+
+    public void setEntity(MovingMachineEntity entity) {
+        this.entity = entity;
     }
 
 }

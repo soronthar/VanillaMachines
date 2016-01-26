@@ -4,13 +4,16 @@ import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.List;
+
+
+//TODO drill entities with inventories
+//TODO power off if there is no more space in the storage.
 
 public class SmallDrillModule implements Drill {
     private MovingMachine machine   ;

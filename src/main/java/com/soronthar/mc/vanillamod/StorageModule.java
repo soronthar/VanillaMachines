@@ -16,7 +16,7 @@ import java.util.List;
 
 public class StorageModule implements Module {
     BlockPos chestPos;
-    private MovingMachine machine;
+    MovingMachine machine;
 
     public StorageModule(BlockPos chestPos) {
         this.chestPos=chestPos;
@@ -99,4 +99,5 @@ public class StorageModule implements Module {
         return stackInSlot.getItem().equals(itemstack.getItem())
                 && stackInSlot.getMetadata()==itemstack.getMetadata();
     }
+
 }

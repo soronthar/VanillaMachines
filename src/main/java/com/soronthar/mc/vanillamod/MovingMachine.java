@@ -23,7 +23,7 @@ public class MovingMachine {
     EngineModule engine;
     RailsModule rails;
     Drill drill;
-    Storage storage;
+    public Storage storage;
 
     List<Harvester> harvester = new ArrayList<>();
     List<Deployer> deployer = new ArrayList<>();
@@ -166,10 +166,6 @@ public class MovingMachine {
             world.setBlockToAir(pos.offset(EnumFacing.DOWN));
             world.setBlockToAir(pos);
         }
-    }
-
-    public void addToStorage(World world, List<ItemStack> drops) {
-        this.storage.addToStorage(world,drops);
     }
 
 

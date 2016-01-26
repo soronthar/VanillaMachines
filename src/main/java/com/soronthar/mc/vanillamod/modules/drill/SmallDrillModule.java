@@ -13,7 +13,6 @@ import java.util.List;
 
 
 //TODO drill entities with inventories
-//TODO power off if there is no more space in the storage.
 
 public class SmallDrillModule implements Drill {
     private MovingMachine machine;
@@ -62,12 +61,20 @@ public class SmallDrillModule implements Drill {
         }
 
         if (this.currentDrillCell < this.drillArea.length) {
-            IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
-            this.machine.addToStorage(world, blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
-            world.destroyBlock(getCurrentDrillBlock(), false);
+            boolean added = drill(world);
+            if (!added) {
+                machine.powerOff(world);
+            }
         } else {
             this.currentDrillCell = 0;
         }
+    }
+
+    private boolean drill(World world) {
+        IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
+        boolean added = this.machine.storage.addToStorage(world, blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
+        world.destroyBlock(getCurrentDrillBlock(), false);
+        return added;
     }
 
     private BlockPos getCurrentDrillBlock() {

@@ -43,18 +43,21 @@ public class StorageModule implements Storage {
     }
 
     @Override
-    public void addToStorage(World world, List<ItemStack> drops) {
+    public boolean addToStorage(World world, List<ItemStack> drops) {
+        boolean placed=true;
+
         for (ItemStack itemStack : drops) {
-            addToStorage(world, itemStack);
+            placed = placed && addToStorage(world, itemStack);
         }
+        return placed;
     }
 
-    private void addToStorage(World world, ItemStack itemstack) {
+    private boolean addToStorage(World world, ItemStack itemstack) {
+        boolean placed=false;
         TileEntity tileEntity = world.getTileEntity(chestPos);
         if (tileEntity instanceof IInventory) {
             IInventory inventory= (IInventory) tileEntity;
             int sizeInventory = inventory.getSizeInventory();
-            boolean placed=false;
             for (int i = 0; i < sizeInventory && !placed; i++) {
                 ItemStack stackInSlot = inventory.getStackInSlot(i);
                 if (stackInSlot!=null
@@ -77,6 +80,7 @@ public class StorageModule implements Storage {
         } else {
             GeneralUtils.eject(itemstack, world, chestPos);
         }
+        return placed;
     }
 
     private boolean canStack(IInventory inventory, ItemStack itemstack, ItemStack stackInSlot) {

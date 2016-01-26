@@ -5,9 +5,12 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-/**
- * Created by pc on 25/01/2016.
- */
 public interface Storage extends Module {
-    void addToStorage(World world, List<ItemStack> drops);
+    /**
+     *
+     * @param world
+     * @param drops
+     * @return True if all the drops could be placed in the inventory
+     */
+    boolean addToStorage(World world, List<ItemStack> drops);
 }

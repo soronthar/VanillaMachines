@@ -20,8 +20,9 @@ public class EjectStorage implements Storage {
     }
 
     @Override
-    public void addToStorage(World world, List<ItemStack> drops) {
+    public boolean addToStorage(World world, List<ItemStack> drops) {
         GeneralUtils.eject(drops, world, this.ejectPos);
+        return true;
     }
 
     @Override

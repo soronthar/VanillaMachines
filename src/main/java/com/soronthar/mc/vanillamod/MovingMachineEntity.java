@@ -1,9 +1,5 @@
 package com.soronthar.mc.vanillamod;
 
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import net.minecraft.block.BlockLever;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
@@ -40,7 +36,7 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
                     move(activatorPos);
                 }
             } else {
-                powerOff(activatorPos);
+                movingMachine.powerOff(getWorld());
             }
         }
     }
@@ -51,12 +47,8 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
         if (isMoving) {
             getWorld().setTileEntity(movingMachine.engine.activatorPos, this);
         } else {
-            powerOff(activatorPos);
+            movingMachine.powerOff(getWorld());
         }
-    }
-
-    private void powerOff(BlockPos leverPos) {
-        movingMachine.powerOff(getWorld());
     }
 
 

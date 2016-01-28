@@ -51,7 +51,7 @@ public class EngineModule implements Module {
 
     public void burnFuel(int size) {
         if (burnTimeLeft <= size) {
-            TileEntityFurnace furnace = (TileEntityFurnace) machine.getWorld().getTileEntity(propellerPos);
+            TileEntityFurnace furnace = (TileEntityFurnace) getWorld().getTileEntity(propellerPos);
             if (furnace != null
                     && furnace.getStackInSlot(1) != null
                     && furnace.getStackInSlot(1).stackSize > 0
@@ -67,7 +67,7 @@ public class EngineModule implements Module {
 
     @Override
     public boolean isValidStructure() {
-        World world = machine.getWorld();
+        World world = getWorld();
         return (isPropellerBlock(world.getBlockState(this.propellerPos))
                 && isActivatorBlock(world.getBlockState(this.activatorPos))
                 && isControllerBlock(world.getBlockState(this.controllerPos)));
@@ -84,20 +84,24 @@ public class EngineModule implements Module {
         this.machine=machine;
     }
 
-    public void powerOn(World world) {
-        if (!GeneralUtils.isBlockInPos(world, this.propellerPos, EngineModule.getPropellerBlockOn())) {
-            BlockFurnace.setState(true, world, this.propellerPos);
+    public void powerOn() {
+        if (!GeneralUtils.isBlockInPos(getWorld(),this.propellerPos, EngineModule.getPropellerBlockOn())) {
+            BlockFurnace.setState(true, getWorld(), this.propellerPos);
         }
     }
 
-    public void powerOff(World world) {
-        if (world.getBlockState(this.propellerPos) != null) {
+    public void powerOff() {
+        if (getWorld().getBlockState(this.propellerPos) != null) {
             try {
-                BlockFurnace.setState(false, world, this.propellerPos);
+                BlockFurnace.setState(false, getWorld(), this.propellerPos);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private World getWorld() {
+        return machine.getWorld();
     }
 
     @Override
@@ -137,14 +141,14 @@ public class EngineModule implements Module {
         return blockState != null && getControllerBlock().equals(blockState.getBlock());
     }
 
-    public boolean hasFuelFor(World world, int count) {
-        TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
+    public boolean hasFuelFor(int count) {
+        TileEntityFurnace furnace = (TileEntityFurnace) getWorld().getTileEntity(propellerPos);
         ItemStack fuelStack = furnace.getStackInSlot(1);
         int additionalBurnTime = fuelStack != null ? fuelStack.stackSize * TileEntityFurnace.getItemBurnTime(fuelStack) : 0;
         return this.burnTimeLeft + additionalBurnTime >= count;
     }
 
-    public boolean isPowered(World world) {
-        return GeneralUtils.isBlockInPos(world, propellerPos, EngineModule.getPropellerBlockOn());
+    public boolean isPowered() {
+        return GeneralUtils.isBlockInPos(getWorld(), propellerPos, EngineModule.getPropellerBlockOn());
     }
 }

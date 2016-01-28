@@ -90,7 +90,7 @@ public class MovingMachine {
     }
 
     public void powerOff(World world) {
-        engine.powerOff(world);
+        engine.powerOff();
         drill.powerOff(world);
             IBlockState blockState = world.getBlockState(this.engine.activatorPos);
             if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
@@ -122,7 +122,7 @@ public class MovingMachine {
     public boolean move(World world, int step) {
         EnumFacing facing = rails.facing;
         List<BlockPos> blockPosList = this.getBlockPosList();
-        if (this.isValidStructure()&& this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world, blockPosList.size())) {
+        if (this.isValidStructure()&& this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(blockPosList.size())) {
             drill.move(world, facing, step);
             engine.move(world, facing, step);
             rails.move(world, facing, step);

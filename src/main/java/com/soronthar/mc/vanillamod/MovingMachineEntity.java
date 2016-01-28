@@ -31,8 +31,8 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
             System.out.println("Updating- this.isInvalid()="+this.isInvalid());
             BlockPos activatorPos = movingMachine.engine.activatorPos;
             if (movingMachine.isValidStructure() && world.isBlockPowered(activatorPos)) {
-                if (!movingMachine.engine.isPowered(world)) {
-                        movingMachine.engine.powerOn(world);
+                if (!movingMachine.engine.isPowered()) {
+                        movingMachine.engine.powerOn();
                 }
 
                 if (!movingMachine.hasFinishedOperation(world)) {

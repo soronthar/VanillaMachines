@@ -28,8 +28,8 @@ public class StorageModule implements Storage {
     }
 
     @Override
-    public boolean isValidStructure(World world) {
-        return GeneralUtils.isBlockInPos(world, this.chestPos, Blocks.chest);
+    public boolean isValidStructure() {
+        return GeneralUtils.isBlockInPos(machine.getWorld(), this.chestPos, Blocks.chest);
     }
 
     @Override

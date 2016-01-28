@@ -1,6 +1,6 @@
 package com.soronthar.mc.vanillamod;
 
-import com.soronthar.mc.vanillamod.modules.EngineBlueprint;
+import com.soronthar.mc.vanillamod.modules.EngineModule;
 import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
 import com.soronthar.mc.vanillamod.modules.RailsBlueprint;
 import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
@@ -21,7 +21,8 @@ import java.util.List;
 
 
 public class MovingMachine {
-    EngineBlueprint engine;
+    World world;
+    EngineModule engine;
     RailsBlueprint rails;
     Drill drill;
     public Storage storage;
@@ -32,7 +33,8 @@ public class MovingMachine {
     public MovingMachine() {
     }
 
-    public MovingMachine(EngineBlueprint engine, RailsBlueprint rails) {
+    public MovingMachine(World world,EngineModule engine, RailsBlueprint rails) {
+        this.world=world;
         this.engine = engine;
         this.rails = rails;
         this.engine.setMachine(this);
@@ -53,19 +55,23 @@ public class MovingMachine {
         return this.storage!=null;
     }
 
+    public World getWorld() {
+        return world;
+    }
+
     public static MovingMachine detectMovingMachine(World world, BlockPos activatorPos) {
         MovingMachine construct = null;
         IBlockState blockState = world.getBlockState(activatorPos);
         Block activatorBlock = blockState.getBlock();
 
-        if (activatorBlock.equals(EngineBlueprint.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
-            EngineBlueprint engine = EngineBlueprint.detectEngineModule(world, activatorPos);
+        if (activatorBlock.equals(EngineModule.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
+            EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
             if (engine != null) {
                 BlockPos propellerPos = engine.propellerPos;
                 RailsBlueprint railsBlueprint = RailsBlueprint.detectRailModule(world, propellerPos);
 
                 if (railsBlueprint != null) {
-                    construct = new MovingMachine(engine, railsBlueprint);
+                    construct = new MovingMachine(world,engine, railsBlueprint);
                     Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsBlueprint.facing);
                     construct.addDrill(drill);
 
@@ -78,9 +84,9 @@ public class MovingMachine {
     }
 
 
-    public boolean isValidStructure(World world) {
-        return engine.isValidStructure(world)
-                && rails.isValidStructure(world);
+    public boolean isValidStructure() {
+        return engine.isValidStructure()
+                && rails.isValidStructure();
     }
 
     public void powerOff(World world) {
@@ -121,12 +127,12 @@ public class MovingMachine {
     public boolean move(World world, int step) {
         EnumFacing facing = rails.facing;
         List<BlockPos> blockPosList = this.getBlockPosList();
-        if (this.isValidStructure(world) && this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world, blockPosList.size())) {
+        if (this.isValidStructure()&& this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(world, blockPosList.size())) {
             drill.move(world, facing, step);
             engine.move(world, facing, step);
             rails.move(world, facing, step);
             storage.move(world, facing, step);
-            engine.burnFuel(world, blockPosList.size());
+            engine.burnFuel(blockPosList.size());
 
             return true;
         } else {
@@ -183,7 +189,7 @@ public class MovingMachine {
     public void performOperation(World world, int tick) {
         if (drill != null) {
             this.drill.performOperation(world, tick);
-            engine.burnFuel(world, this.drill.fuelBurn(world));
+            engine.burnFuel(this.drill.fuelBurn(world));
         }
     }
 

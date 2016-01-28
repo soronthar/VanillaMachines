@@ -1,7 +1,7 @@
 package com.soronthar.mc.vanillamod.commands;
 
 import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
-import com.soronthar.mc.vanillamod.modules.EngineBlueprint;
+import com.soronthar.mc.vanillamod.modules.EngineModule;
 import com.soronthar.mc.vanillamod.modules.RailsBlueprint;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
@@ -52,13 +52,13 @@ public class SpawnSmallDrillerCommand implements ICommand{
             EnumFacing facingLeft = facing.rotateYCCW();
             EnumFacing facingOpposite = facing.getOpposite();
 
-            world.setBlockState(propellerPos, EngineBlueprint.getPropellerBlockOff().getDefaultState());
+            world.setBlockState(propellerPos, EngineModule.getPropellerBlockOff().getDefaultState());
             TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
             furnace.setInventorySlotContents(1, new ItemStack(Items.stick, 64));
 
-            world.setBlockState(controllerPos, EngineBlueprint.getControllerBlock().getDefaultState());
+            world.setBlockState(controllerPos, EngineModule.getControllerBlock().getDefaultState());
             world.setBlockState(controllerPos.offset(facingOpposite), Blocks.chest.getDefaultState());
-            world.setBlockState(controllerPos.up(), EngineBlueprint.getActivatorBlock().getDefaultState().withProperty(BlockLever.FACING, BlockLever.EnumOrientation.forFacings(EnumFacing.UP, facing)));
+            world.setBlockState(controllerPos.up(), EngineModule.getActivatorBlock().getDefaultState().withProperty(BlockLever.FACING, BlockLever.EnumOrientation.forFacings(EnumFacing.UP, facing)));
             world.setBlockState(propellerPos.offset(facingRight), RailsBlueprint.getRailsBlock().getDefaultState());
             world.setBlockState(propellerPos.offset(facingRight).offset(facingOpposite), RailsBlueprint.getRailsBlock().getDefaultState());
             world.setBlockState(propellerPos.offset(facingLeft), RailsBlueprint.getRailsBlock().getDefaultState());

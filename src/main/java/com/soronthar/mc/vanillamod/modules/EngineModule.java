@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-public class EngineBlueprint implements Module {
+public class EngineModule implements Module {
     private MovingMachine machine;
 
     public BlockPos activatorPos;
@@ -25,35 +25,33 @@ public class EngineBlueprint implements Module {
     public BlockPos propellerPos;
     int burnTimeLeft = 0;
 
-    public EngineBlueprint() {
+    public EngineModule() {
     }
 
-    private EngineBlueprint(BlockPos activatorPos, BlockPos controllerPos, BlockPos propellerPos) {
+    private EngineModule(BlockPos activatorPos, BlockPos controllerPos, BlockPos propellerPos) {
         this.activatorPos = activatorPos;
         this.controllerPos = controllerPos;
         this.propellerPos = propellerPos;
     }
 
-    public static EngineBlueprint detectEngineModule(World world, BlockPos activatorPos) {
-        EngineBlueprint engine = null;
+    public static EngineModule detectEngineModule(World world, BlockPos activatorPos) {
+        EngineModule engine = null;
 
         EnumFacing controllerFacing = GeneralUtils.findBlockAround(world, activatorPos, getControllerBlock());
         if (controllerFacing != null) {
             BlockPos controllerPos = activatorPos.offset(controllerFacing);
             BlockPos propellerPos = controllerPos.down();
             if (isPropellerBlock(world.getBlockState(propellerPos))) {
-                engine = new EngineBlueprint(activatorPos, controllerPos, propellerPos);
+                engine = new EngineModule(activatorPos, controllerPos, propellerPos);
                 TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
             }
         }
         return engine;
     }
 
-    public void burnFuel(World world, int size) {
-
-
+    public void burnFuel(int size) {
         if (burnTimeLeft <= size) {
-            TileEntityFurnace furnace = (TileEntityFurnace) world.getTileEntity(propellerPos);
+            TileEntityFurnace furnace = (TileEntityFurnace) machine.getWorld().getTileEntity(propellerPos);
             if (furnace != null
                     && furnace.getStackInSlot(1) != null
                     && furnace.getStackInSlot(1).stackSize > 0
@@ -68,7 +66,8 @@ public class EngineBlueprint implements Module {
     }
 
     @Override
-    public boolean isValidStructure(World world) {
+    public boolean isValidStructure() {
+        World world = machine.getWorld();
         return (isPropellerBlock(world.getBlockState(this.propellerPos))
                 && isActivatorBlock(world.getBlockState(this.activatorPos))
                 && isControllerBlock(world.getBlockState(this.controllerPos)));
@@ -86,7 +85,7 @@ public class EngineBlueprint implements Module {
     }
 
     public void powerOn(World world) {
-        if (!GeneralUtils.isBlockInPos(world, this.propellerPos, EngineBlueprint.getPropellerBlockOn())) {
+        if (!GeneralUtils.isBlockInPos(world, this.propellerPos, EngineModule.getPropellerBlockOn())) {
             BlockFurnace.setState(true, world, this.propellerPos);
         }
     }
@@ -146,6 +145,6 @@ public class EngineBlueprint implements Module {
     }
 
     public boolean isPowered(World world) {
-        return GeneralUtils.isBlockInPos(world,propellerPos, EngineBlueprint.getPropellerBlockOn());
+        return GeneralUtils.isBlockInPos(world, propellerPos, EngineModule.getPropellerBlockOn());
     }
 }

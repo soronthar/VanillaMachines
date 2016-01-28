@@ -87,10 +87,10 @@ public class RailsBlueprint implements Module {
     }
 
     @Override
-    public boolean isValidStructure(World world) {
+    public boolean isValidStructure() {
         boolean valid=true;
         for (BlockPos rail : rails) {
-            valid = valid && GeneralUtils.isBlockInPos(world, rail, getRailsBlock());
+            valid = valid && GeneralUtils.isBlockInPos(machine.getWorld(), rail, getRailsBlock());
         }
         return valid;
     }

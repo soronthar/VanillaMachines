@@ -96,8 +96,8 @@ public class SmallDrillModule implements Drill {
 
 
     @Override
-    public boolean isValidStructure(World world) {
-        return GeneralUtils.isBlockInPos(world, this.drillHeadPos, DrillBlueprint.getDrillHeadBlock());
+    public boolean isValidStructure() {
+        return GeneralUtils.isBlockInPos(machine.getWorld(), this.drillHeadPos, DrillBlueprint.getDrillHeadBlock());
     }
 
     @Override

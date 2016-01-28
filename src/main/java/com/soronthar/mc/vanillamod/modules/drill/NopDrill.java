@@ -9,9 +9,6 @@ import net.minecraft.world.World;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by pc on 26/01/2016.
- */
 public class NopDrill implements Drill {
 
     public static Drill instance=new NopDrill();
@@ -26,7 +23,7 @@ public class NopDrill implements Drill {
     }
 
     @Override
-    public boolean isValidStructure(World world) {
+    public boolean isValidStructure() {
         return true;
     }
 

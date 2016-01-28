@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface Module {
-    boolean isValidStructure(World world);
+    boolean isValidStructure();
 
     void move(World world, EnumFacing facing, int step);
 

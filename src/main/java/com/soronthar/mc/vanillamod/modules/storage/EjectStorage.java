@@ -26,7 +26,7 @@ public class EjectStorage implements Storage {
     }
 
     @Override
-    public boolean isValidStructure(World world) {
+    public boolean isValidStructure() {
         return true;
     }
 

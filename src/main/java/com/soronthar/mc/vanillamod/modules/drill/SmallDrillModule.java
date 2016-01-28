@@ -76,7 +76,7 @@ public class SmallDrillModule implements Drill {
 
     private boolean drill(World world) {
         IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
-        boolean added = this.machine.storage.addToStorage(world, blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
+        boolean added = this.machine.storage.addToStorage(blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
         TileEntity entity = world.getTileEntity(getCurrentDrillBlock());
         if (entity != null && entity instanceof IInventory) {
             IInventory inventory = (IInventory) entity;
@@ -84,7 +84,7 @@ public class SmallDrillModule implements Drill {
             for (int i = 0; i < sizeInventory; i++) {
                 ItemStack stackInSlot = inventory.removeStackFromSlot(i);
                 if (stackInSlot != null) {
-                    added = added && this.machine.storage.addToStorage(world, stackInSlot);
+                    added = added && this.machine.storage.addToStorage(stackInSlot);
                 }
             }
 

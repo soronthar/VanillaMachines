@@ -46,20 +46,20 @@ public class StorageModule implements Storage {
     }
 
     @Override
-    public boolean addToStorage(World world, List<ItemStack> drops) {
+    public boolean addToStorage(List<ItemStack> drops) {
         boolean placed=true;
 
         for (ItemStack itemStack : drops) {
-            placed = placed && addToStorage(world, itemStack);
+            placed = placed && addToStorage(itemStack);
         }
         return placed;
     }
 
 
     //TODO: Partial itemstack.. if there is a slot with 16 and a stack is added, add 48 and set the rest in another slot.
-    public boolean addToStorage(World world, ItemStack itemstack) {
+    public boolean addToStorage(ItemStack itemstack) {
         boolean placed=false;
-        TileEntity tileEntity = world.getTileEntity(chestPos);
+        TileEntity tileEntity = getWorld().getTileEntity(chestPos);
         if (tileEntity instanceof IInventory) {
             IInventory inventory= (IInventory) tileEntity;
             int sizeInventory = inventory.getSizeInventory();
@@ -80,10 +80,10 @@ public class StorageModule implements Storage {
             if (placed) {
                 inventory.markDirty();
             } else {
-                GeneralUtils.eject(itemstack, world, chestPos);
+                GeneralUtils.eject(itemstack, getWorld(), chestPos);
             }
         } else {
-            GeneralUtils.eject(itemstack, world, chestPos);
+            GeneralUtils.eject(itemstack, getWorld(), chestPos);
         }
         return placed;
     }

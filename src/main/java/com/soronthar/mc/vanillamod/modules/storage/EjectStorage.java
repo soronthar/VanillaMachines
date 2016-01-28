@@ -5,7 +5,6 @@ import com.soronthar.mc.vanillamod.Storage;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,14 +12,15 @@ import java.util.List;
 public class EjectStorage implements Storage {
 
     private BlockPos ejectPos;
+    private MovingMachine machine;
 
     public EjectStorage(BlockPos ejectPos) {
         this.ejectPos = ejectPos;
     }
 
     @Override
-    public boolean addToStorage(World world, List<ItemStack> drops) {
-        GeneralUtils.eject(drops, world, this.ejectPos);
+    public boolean addToStorage(List<ItemStack> drops) {
+        GeneralUtils.eject(drops, machine.getWorld(), this.ejectPos);
         return true;
     }
 
@@ -41,11 +41,12 @@ public class EjectStorage implements Storage {
 
     @Override
     public void setMachine(MovingMachine machine) {
+        this.machine =machine;
     }
 
     @Override
-    public boolean addToStorage(World world, ItemStack itemstack) {
-        GeneralUtils.eject(itemstack, world, this.ejectPos);
+    public boolean addToStorage(ItemStack itemstack) {
+        GeneralUtils.eject(itemstack, machine.getWorld(), this.ejectPos);
         return true;
     }
 }

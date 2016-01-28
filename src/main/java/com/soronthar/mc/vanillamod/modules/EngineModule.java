@@ -3,10 +3,7 @@ package com.soronthar.mc.vanillamod.modules;
 import com.soronthar.mc.vanillamod.Module;
 import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
@@ -53,9 +50,9 @@ public class EngineModule implements Module {
     @Override
     public boolean isValidStructure() {
         World world = getWorld();
-        return (isPropellerBlock(world.getBlockState(this.propellerPos))
-                && isActivatorBlock(world.getBlockState(this.activatorPos))
-                && isControllerBlock(world.getBlockState(this.controllerPos)));
+        return (EngineBlueprint.isPropellerBlock(world.getBlockState(this.propellerPos))
+                && EngineBlueprint.isActivatorBlock(world.getBlockState(this.activatorPos))
+                && EngineBlueprint.isControllerBlock(world.getBlockState(this.controllerPos)));
     }
 
 
@@ -66,11 +63,11 @@ public class EngineModule implements Module {
 
     @Override
     public void setMachine(MovingMachine machine) {
-        this.machine=machine;
+        this.machine = machine;
     }
 
     public void powerOn() {
-        if (!GeneralUtils.isBlockInPos(getWorld(),this.propellerPos, EngineModule.getPropellerBlockOn())) {
+        if (!GeneralUtils.isBlockInPos(getWorld(), this.propellerPos, EngineBlueprint.getPropellerBlockOn())) {
             BlockFurnace.setState(true, getWorld(), this.propellerPos);
         }
     }
@@ -96,35 +93,6 @@ public class EngineModule implements Module {
         this.propellerPos = MovingMachine.moveBlock(world, this.propellerPos, facing, step);
     }
 
-    public static Block getActivatorBlock() {
-        return Blocks.lever;
-    }
-
-    public static Block getPropellerBlockOff() {
-        return Blocks.furnace;
-    }
-
-    public static Block getPropellerBlockOn() {
-        return Blocks.lit_furnace;
-    }
-
-    public static Block getControllerBlock() {
-        return Blocks.noteblock;
-    }
-
-
-    public static boolean isActivatorBlock(IBlockState blockState) {
-        return blockState != null && getActivatorBlock().equals(blockState.getBlock());
-    }
-
-    public static boolean isPropellerBlock(IBlockState blockState) {
-        Block block = blockState.getBlock();
-        return getPropellerBlockOff().equals(block) || getPropellerBlockOn().equals(block);
-    }
-
-    private boolean isControllerBlock(IBlockState blockState) {
-        return blockState != null && getControllerBlock().equals(blockState.getBlock());
-    }
 
     public boolean hasFuelFor(int count) {
         TileEntityFurnace furnace = (TileEntityFurnace) getWorld().getTileEntity(propellerPos);
@@ -134,6 +102,6 @@ public class EngineModule implements Module {
     }
 
     public boolean isPowered() {
-        return GeneralUtils.isBlockInPos(getWorld(), propellerPos, EngineModule.getPropellerBlockOn());
+        return GeneralUtils.isBlockInPos(getWorld(), propellerPos, EngineBlueprint.getPropellerBlockOn());
     }
 }

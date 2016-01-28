@@ -63,10 +63,8 @@ public class MovingMachine {
 
     public static MovingMachine detectMovingMachine(World world, BlockPos activatorPos) {
         MovingMachine construct = null;
-        IBlockState blockState = world.getBlockState(activatorPos);
-        Block activatorBlock = blockState.getBlock();
 
-        if (activatorBlock.equals(EngineModule.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
+        if (EngineBlueprint.isActivatorBlock( world.getBlockState(activatorPos)) && !world.isBlockPowered(activatorPos)) {
             EngineModule engine = EngineBlueprint.detectEngineModule(world, activatorPos);
             if (engine != null) {
                 BlockPos propellerPos = engine.propellerPos;

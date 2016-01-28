@@ -3,7 +3,6 @@ package com.soronthar.mc.vanillamod.modules.drill;
 import com.soronthar.mc.vanillamod.Drill;
 import com.soronthar.mc.vanillamod.MovingMachine;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,12 +12,12 @@ public class NopDrill implements Drill {
     public static Drill instance=new NopDrill();
 
     @Override
-    public boolean hasFinishedOperation(World world) {
+    public boolean hasFinishedOperation() {
         return true;
     }
 
     @Override
-    public void performOperation(World world, int tick) {
+    public void performOperation(int tick) {
     }
 
     @Override
@@ -40,11 +39,11 @@ public class NopDrill implements Drill {
     }
 
     @Override
-    public void powerOff(World world) {
+    public void powerOff() {
     }
 
     @Override
-    public int fuelBurn(World world) {
+    public int fuelBurn() {
         return 0;
     }
 }

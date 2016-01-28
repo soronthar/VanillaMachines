@@ -3,9 +3,9 @@ package com.soronthar.mc.vanillamod;
 import net.minecraft.world.World;
 
 public interface Powered {
-    void powerOff(World world);
+    void powerOff();
 
-    int fuelBurn(World world);
+    int fuelBurn();
 
 
 }

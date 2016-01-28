@@ -45,29 +45,28 @@ public class SmallDrillModule implements Drill {
      * Looks at the 9 blocks in front of the drills, and make sure they are all "air".
      * Running water or lava will stop the drill.
      *
-     * @param world
      * @return if the drill has finished the drilling or not.
      */
     @Override
-    public boolean hasFinishedOperation(World world) {
+    public boolean hasFinishedOperation() {
         boolean hasFinishedDrilling = true;
         for (BlockPos blockPos : drillArea) {
-            hasFinishedDrilling = hasFinishedDrilling && world.isAirBlock(blockPos);
+            hasFinishedDrilling = hasFinishedDrilling && getWorld().isAirBlock(blockPos);
         }
 
         return hasFinishedDrilling;
     }
 
     @Override
-    public void performOperation(World world, int tick) {
-        while (this.currentDrillCell < this.drillArea.length && (world.isAirBlock(getCurrentDrillBlock()) || GeneralUtils.isLiquid(world, getCurrentDrillBlock()))) {
+    public void performOperation(int tick) {
+        while (this.currentDrillCell < this.drillArea.length && (getWorld().isAirBlock(getCurrentDrillBlock()) || GeneralUtils.isLiquid(getWorld(), getCurrentDrillBlock()))) {
             this.currentDrillCell++;
         }
 
         if (this.currentDrillCell < this.drillArea.length) {
-            boolean added = drill(world);
+            boolean added = drill(getWorld());
             if (!added) {
-                machine.powerOff(world);
+                machine.powerOff(getWorld());
             }
         } else {
             this.currentDrillCell = 0;
@@ -104,13 +103,13 @@ public class SmallDrillModule implements Drill {
     }
 
     @Override
-    public void powerOff(World world) {
+    public void powerOff() {
         currentDrillCell = 0;
     }
 
 
     @Override
-    public int fuelBurn(World world) {
+    public int fuelBurn() {
         return 1;
     }
 

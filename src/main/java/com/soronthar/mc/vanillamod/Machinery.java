@@ -4,8 +4,8 @@ import net.minecraft.world.World;
 
 public interface Machinery extends Module {
 
-    boolean hasFinishedOperation(World world);
+    boolean hasFinishedOperation();
 
-    void performOperation(World world, int tick);
+    void performOperation(int tick);
 
 }

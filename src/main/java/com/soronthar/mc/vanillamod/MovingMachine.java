@@ -94,7 +94,7 @@ public class MovingMachine {
 
     public void powerOff(World world) {
         engine.powerOff();
-        drill.powerOff(world);
+        drill.powerOff();
             IBlockState blockState = world.getBlockState(this.engine.activatorPos);
             if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
                 world.setBlockState(this.engine.activatorPos, blockState.withProperty(BlockLever.POWERED, false));
@@ -181,13 +181,13 @@ public class MovingMachine {
 
 
     public boolean hasFinishedOperation(World world) {
-        return drill.hasFinishedOperation(world);
+        return drill.hasFinishedOperation();
     }
 
     public void performOperation(World world, int tick) {
         if (drill != null) {
-            this.drill.performOperation(world, tick);
-            engine.burnFuel(this.drill.fuelBurn(world));
+            this.drill.performOperation(tick);
+            engine.burnFuel(this.drill.fuelBurn());
         }
     }
 

@@ -106,7 +106,7 @@ public class MovingMachine {
             canMove = canMove && (GeneralUtils.canBlockBeReplaced(world, newPos)
                     || blockPosList.contains(newPos));
         }
-        return canMove && this.rails.hasSupport(world, facing, step, blockPosList);
+        return canMove && this.rails.hasSupport(step, blockPosList);
     }
 
     public List<BlockPos> getBlockPosList() {

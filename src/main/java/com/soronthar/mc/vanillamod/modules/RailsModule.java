@@ -34,12 +34,12 @@ public class RailsModule implements Module {
         return Arrays.asList(rails);
     }
 
-    public boolean hasSupport(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {
+    public boolean hasSupport(int step, List<BlockPos> blockPosList) {
         boolean canMove=true;
         for (BlockPos rail : rails) {
-            BlockPos newPos = rail.offset(facing, step);
+            BlockPos newPos = rail.offset(this.facing, step);
             canMove = canMove
-                    && world.getBlockState(newPos.offset(EnumFacing.DOWN)).getBlock().isBlockSolid(world, newPos.offset(EnumFacing.DOWN), EnumFacing.UP);
+                    && getWorld().getBlockState(newPos.offset(EnumFacing.DOWN)).getBlock().isBlockSolid(getWorld(), newPos.offset(EnumFacing.DOWN), EnumFacing.UP);
         }
         return canMove;
     }

@@ -1,8 +1,10 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.modules.EngineBlueprint;
 import com.soronthar.mc.vanillamod.modules.EngineModule;
-import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
 import com.soronthar.mc.vanillamod.modules.RailsBlueprint;
+import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
+import com.soronthar.mc.vanillamod.modules.RailsModule;
 import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
@@ -23,7 +25,7 @@ import java.util.List;
 public class MovingMachine {
     World world;
     EngineModule engine;
-    RailsBlueprint rails;
+    RailsModule rails;
     Drill drill;
     public Storage storage;
 
@@ -33,7 +35,7 @@ public class MovingMachine {
     public MovingMachine() {
     }
 
-    public MovingMachine(World world,EngineModule engine, RailsBlueprint rails) {
+    public MovingMachine(World world,EngineModule engine, RailsModule rails) {
         this.world=world;
         this.engine = engine;
         this.rails = rails;
@@ -65,17 +67,17 @@ public class MovingMachine {
         Block activatorBlock = blockState.getBlock();
 
         if (activatorBlock.equals(EngineModule.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
-            EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
+            EngineModule engine = EngineBlueprint.detectEngineModule(world, activatorPos);
             if (engine != null) {
                 BlockPos propellerPos = engine.propellerPos;
-                RailsBlueprint railsBlueprint = RailsBlueprint.detectRailModule(world, propellerPos);
+                RailsModule railsModule = RailsBlueprint.detectRailModule(world, propellerPos);
 
-                if (railsBlueprint != null) {
-                    construct = new MovingMachine(world,engine, railsBlueprint);
-                    Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsBlueprint.facing);
+                if (railsModule != null) {
+                    construct = new MovingMachine(world,engine, railsModule);
+                    Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsModule.facing);
                     construct.addDrill(drill);
 
-                    Storage storage = StorageBlueprint.detectStorage(world, engine, railsBlueprint.facing);
+                    Storage storage = StorageBlueprint.detectStorage(world, engine, railsModule.facing);
                     construct.addStorage(storage);
                 }
             }

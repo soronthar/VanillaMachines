@@ -2,7 +2,7 @@ package com.soronthar.mc.vanillamod.commands;
 
 import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
 import com.soronthar.mc.vanillamod.modules.EngineModule;
-import com.soronthar.mc.vanillamod.modules.RailsBlueprint;
+import com.soronthar.mc.vanillamod.modules.RailsModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
 import net.minecraft.command.CommandException;
@@ -59,10 +59,10 @@ public class SpawnSmallDrillerCommand implements ICommand{
             world.setBlockState(controllerPos, EngineModule.getControllerBlock().getDefaultState());
             world.setBlockState(controllerPos.offset(facingOpposite), Blocks.chest.getDefaultState());
             world.setBlockState(controllerPos.up(), EngineModule.getActivatorBlock().getDefaultState().withProperty(BlockLever.FACING, BlockLever.EnumOrientation.forFacings(EnumFacing.UP, facing)));
-            world.setBlockState(propellerPos.offset(facingRight), RailsBlueprint.getRailsBlock().getDefaultState());
-            world.setBlockState(propellerPos.offset(facingRight).offset(facingOpposite), RailsBlueprint.getRailsBlock().getDefaultState());
-            world.setBlockState(propellerPos.offset(facingLeft), RailsBlueprint.getRailsBlock().getDefaultState());
-            world.setBlockState(propellerPos.offset(facingLeft).offset(facingOpposite), RailsBlueprint.getRailsBlock().getDefaultState());
+            world.setBlockState(propellerPos.offset(facingRight), RailsModule.getRailsBlock().getDefaultState());
+            world.setBlockState(propellerPos.offset(facingRight).offset(facingOpposite), RailsModule.getRailsBlock().getDefaultState());
+            world.setBlockState(propellerPos.offset(facingLeft), RailsModule.getRailsBlock().getDefaultState());
+            world.setBlockState(propellerPos.offset(facingLeft).offset(facingOpposite), RailsModule.getRailsBlock().getDefaultState());
 
             world.setBlockState(controllerPos.offset(facing), DrillBlueprint.getDrillHeadBlock().getDefaultState());
 

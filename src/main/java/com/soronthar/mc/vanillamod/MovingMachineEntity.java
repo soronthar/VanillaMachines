@@ -5,7 +5,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 
-//TODOÑ chunk borders... stop if chunk is not loaded.
+//TODO: chunk borders... stop if chunk is not loaded.
 //TODO: When the world is closed, the furnace keeps "burning"
 //TODO: Persist the entity..somehow.
 //TODO: the construct should have a reference to the world.

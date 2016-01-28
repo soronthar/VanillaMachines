@@ -5,6 +5,7 @@ import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
 import com.soronthar.mc.vanillamod.modules.RailsModule;
 import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -55,20 +56,24 @@ public class MovingMachine {
 
     public static MovingMachine detectMovingMachine(World world, BlockPos activatorPos) {
         MovingMachine construct = null;
-        EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
-        if (engine != null) {
-            BlockPos propellerPos = engine.propellerPos;
-            RailsModule railsModule = RailsModule.detectRailModule(world, propellerPos);
+        IBlockState blockState = world.getBlockState(activatorPos);
+        Block activatorBlock = blockState.getBlock();
 
-            if (railsModule != null) {
-                construct = new MovingMachine(engine, railsModule);
-                Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsModule.facing);
-                construct.addDrill(drill);
+        if (activatorBlock.equals(EngineModule.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
+            EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
+            if (engine != null) {
+                BlockPos propellerPos = engine.propellerPos;
+                RailsModule railsModule = RailsModule.detectRailModule(world, propellerPos);
 
-                Storage storage = StorageBlueprint.detectStorage(world, engine, railsModule.facing);
-                construct.addStorage(storage);
+                if (railsModule != null) {
+                    construct = new MovingMachine(engine, railsModule);
+                    Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsModule.facing);
+                    construct.addDrill(drill);
+
+                    Storage storage = StorageBlueprint.detectStorage(world, engine, railsModule.facing);
+                    construct.addStorage(storage);
+                }
             }
-
         }
         return construct;
     }

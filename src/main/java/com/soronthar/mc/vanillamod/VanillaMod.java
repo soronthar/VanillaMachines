@@ -51,18 +51,15 @@ public class VanillaMod {
 
         EntityPlayer entityPlayer = event.entityPlayer;
         World world = event.world;
-        BlockPos activatorPos = event.pos;
         if (!world.isRemote) {
+            BlockPos activatorPos = event.pos;
             if (activatorPos != null) {
-                IBlockState blockState = world.getBlockState(activatorPos);
-                Block activatorBlock = blockState.getBlock();
-                if (activatorBlock.equals(EngineModule.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
-                    MovingMachine construct= MovingMachine.detectMovingMachine(world, activatorPos);
-                    if (construct!=null) {
-                        MovingMachineEntity entity = new MovingMachineEntity(construct);
-                        world.setTileEntity(activatorPos, entity);
-                    }
+                MovingMachine construct = MovingMachine.detectMovingMachine(world, activatorPos);
+                if (construct != null) {
+                    MovingMachineEntity entity = new MovingMachineEntity(construct);
+                    world.setTileEntity(activatorPos, entity);
                 }
+
             }
         }
     }

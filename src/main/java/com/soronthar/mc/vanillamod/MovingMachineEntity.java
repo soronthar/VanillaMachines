@@ -8,14 +8,19 @@ import net.minecraft.world.World;
 //TODO: chunk borders... stop if chunk is not loaded.
 //TODO: When the world is closed, the furnace keeps "burning"
 //TODO: Persist the entity..somehow.
-//TODO: the construct should have a reference to the world.
 //TODO: Turn the machine with  a stick, or using other mechanism like the sign or a block (piston)
+//TODO: Change System.out to logger
 public class MovingMachineEntity extends TileEntity implements ITickable {
+    static volatile int instanceCount=0;
+
     MovingMachine movingMachine;
     int tick;
 
     public MovingMachineEntity(MovingMachine movingMachine) {
         this.movingMachine = movingMachine;
+        instanceCount++;
+        System.out.println("Creating " + this + ". Instance Count: " + instanceCount);
+
     }
 
     @Override
@@ -26,23 +31,24 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        this.tick++;
         World world = getWorld();
-        if (!world.isRemote && !this.isInvalid() && movingMachine != null && this.tick % 20 == 0) {
-            BlockPos activatorPos = movingMachine.engine.activatorPos;
-            if (movingMachine.isValidStructure() && world.isBlockPowered(activatorPos)) {
-                if (!movingMachine.engine.isPowered()) {
-                        movingMachine.engine.powerOn();
-                }
-
-                if (!movingMachine.hasFinishedOperation()) {
-                    movingMachine.performOperation(this.tick);
+        if (!world.isRemote ) {
+            this.tick++;
+            if (!this.isInvalid() && movingMachine != null && this.tick % 20 == 0) {
+                BlockPos activatorPos = movingMachine.engine.activatorPos;
+                if (movingMachine.isValidStructure() && world.isBlockPowered(activatorPos)) {
+                    if (!movingMachine.engine.isPowered()) {
+                            movingMachine.engine.powerOn();
+                    }
+                    if (!movingMachine.hasFinishedOperation()) {
+                        movingMachine.performOperation(this.tick);
+                    } else {
+                        move(activatorPos);
+                    }
                 } else {
-                    move(activatorPos);
+                    movingMachine.powerOff();
+                    this.invalidate();
                 }
-            } else {
-                movingMachine.powerOff();
-                this.invalidate();
             }
         }
     }
@@ -61,7 +67,8 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        System.out.println("Collecting " + this);
+        instanceCount--;
+        System.out.println("Collecting " + this + ". Instance Count: " + instanceCount);
     }
 
 

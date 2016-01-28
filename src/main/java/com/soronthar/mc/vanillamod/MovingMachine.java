@@ -92,17 +92,12 @@ public class MovingMachine {
     public void powerOff(World world) {
         engine.powerOff(world);
         drill.powerOff(world);
-        TileEntity tileEntity = world.getTileEntity(this.engine.activatorPos);
-        if (tileEntity instanceof MovingMachineEntity) {
             IBlockState blockState = world.getBlockState(this.engine.activatorPos);
             if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
                 world.setBlockState(this.engine.activatorPos, blockState.withProperty(BlockLever.POWERED, false));
                 world.markBlockForUpdate(this.engine.activatorPos);
             }
             world.removeTileEntity(this.engine.activatorPos);
-            tileEntity.invalidate();
-        }
-
     }
 
     public boolean canMove(World world, EnumFacing facing, int step, List<BlockPos> blockPosList) {

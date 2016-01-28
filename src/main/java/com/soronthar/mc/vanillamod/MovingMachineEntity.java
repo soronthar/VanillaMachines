@@ -18,6 +18,12 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
     }
 
     @Override
+    public void invalidate() {
+        super.invalidate();
+        this.movingMachine=null;
+    }
+
+    @Override
     public void update() {
         this.tick++;
         World world = getWorld();
@@ -36,6 +42,7 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
                 }
             } else {
                 movingMachine.powerOff(getWorld());
+                this.invalidate();
             }
         }
     }

@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-public class EngineModule implements Module {
+public class EngineBlueprint implements Module {
     private MovingMachine machine;
 
     public BlockPos activatorPos;
@@ -25,24 +25,24 @@ public class EngineModule implements Module {
     public BlockPos propellerPos;
     int burnTimeLeft = 0;
 
-    public EngineModule() {
+    public EngineBlueprint() {
     }
 
-    private EngineModule(BlockPos activatorPos, BlockPos controllerPos, BlockPos propellerPos) {
+    private EngineBlueprint(BlockPos activatorPos, BlockPos controllerPos, BlockPos propellerPos) {
         this.activatorPos = activatorPos;
         this.controllerPos = controllerPos;
         this.propellerPos = propellerPos;
     }
 
-    public static EngineModule detectEngineModule(World world, BlockPos activatorPos) {
-        EngineModule engine = null;
+    public static EngineBlueprint detectEngineModule(World world, BlockPos activatorPos) {
+        EngineBlueprint engine = null;
 
         EnumFacing controllerFacing = GeneralUtils.findBlockAround(world, activatorPos, getControllerBlock());
         if (controllerFacing != null) {
             BlockPos controllerPos = activatorPos.offset(controllerFacing);
             BlockPos propellerPos = controllerPos.down();
             if (isPropellerBlock(world.getBlockState(propellerPos))) {
-                engine = new EngineModule(activatorPos, controllerPos, propellerPos);
+                engine = new EngineBlueprint(activatorPos, controllerPos, propellerPos);
                 TileEntityFurnace tileEntity = (TileEntityFurnace) world.getTileEntity(propellerPos);
             }
         }
@@ -86,7 +86,7 @@ public class EngineModule implements Module {
     }
 
     public void powerOn(World world) {
-        if (!GeneralUtils.isBlockInPos(world, this.propellerPos, EngineModule.getPropellerBlockOn())) {
+        if (!GeneralUtils.isBlockInPos(world, this.propellerPos, EngineBlueprint.getPropellerBlockOn())) {
             BlockFurnace.setState(true, world, this.propellerPos);
         }
     }
@@ -146,6 +146,6 @@ public class EngineModule implements Module {
     }
 
     public boolean isPowered(World world) {
-        return GeneralUtils.isBlockInPos(world,propellerPos, EngineModule.getPropellerBlockOn());
+        return GeneralUtils.isBlockInPos(world,propellerPos, EngineBlueprint.getPropellerBlockOn());
     }
 }

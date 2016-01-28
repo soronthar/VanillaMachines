@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-public class RailsModule implements Module {
+public class RailsBlueprint implements Module {
     private MovingMachine machine;
     private BlockPos[] rails;
     public EnumFacing facing;
@@ -21,10 +21,10 @@ public class RailsModule implements Module {
         return Blocks.planks;
     }
 
-    public RailsModule() {
+    public RailsBlueprint() {
     }
 
-    private RailsModule(BlockPos[] rails, EnumFacing facing) {
+    private RailsBlueprint(BlockPos[] rails, EnumFacing facing) {
         this.rails = rails;
         this.facing = facing;
     }
@@ -34,32 +34,32 @@ public class RailsModule implements Module {
         this.machine=machine;
     }
 
-    public static RailsModule detectRailModule(World world, BlockPos propellerPos) {
+    public static RailsBlueprint detectRailModule(World world, BlockPos propellerPos) {
         BlockPos[] rails = new BlockPos[4];
-        RailsModule railsModule=null;
+        RailsBlueprint railsBlueprint =null;
         EnumFacing railsFacing = null;
 
         EnumFacing[] values = {EnumFacing.NORTH, EnumFacing.WEST};
-        for (int i1 = 0, valuesLength = values.length; i1 < valuesLength && railsModule == null; i1++) {
+        for (int i1 = 0, valuesLength = values.length; i1 < valuesLength && railsBlueprint == null; i1++) {
             EnumFacing facing = values[i1];
             rails[0] = propellerPos.offset(facing);
             rails[1] = propellerPos.offset(facing.getOpposite());
             if (GeneralUtils.isBlockInPos(world, rails[0], getRailsBlock()) &&
                     GeneralUtils.isBlockInPos(world, rails[1], getRailsBlock())) {
                 EnumFacing[] t = {facing.rotateY(), facing.rotateYCCW()};
-                for (int i = 0, tLength = t.length; i < tLength && railsModule == null; i++) {
+                for (int i = 0, tLength = t.length; i < tLength && railsBlueprint == null; i++) {
                     EnumFacing enumFacing = t[i];
                     if (GeneralUtils.isBlockInPos(world, rails[0].offset(enumFacing), getRailsBlock()) &&
                             GeneralUtils.isBlockInPos(world, rails[1].offset(enumFacing), getRailsBlock())) {
                         rails[2] = rails[0].offset(enumFacing);
                         rails[3] = rails[1].offset(enumFacing);
                         railsFacing = enumFacing.getOpposite();
-                        railsModule=new RailsModule(rails, railsFacing);
+                        railsBlueprint =new RailsBlueprint(rails, railsFacing);
                     }
                 }
             }
         }
-        return railsModule;
+        return railsBlueprint;
     }
 
     @Override

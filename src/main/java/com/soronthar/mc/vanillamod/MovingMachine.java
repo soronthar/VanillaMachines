@@ -1,8 +1,8 @@
 package com.soronthar.mc.vanillamod;
 
-import com.soronthar.mc.vanillamod.modules.EngineModule;
+import com.soronthar.mc.vanillamod.modules.EngineBlueprint;
 import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
-import com.soronthar.mc.vanillamod.modules.RailsModule;
+import com.soronthar.mc.vanillamod.modules.RailsBlueprint;
 import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;
@@ -21,26 +21,25 @@ import java.util.List;
 
 
 public class MovingMachine {
-    EngineModule engine;
-    RailsModule rails;
+    EngineBlueprint engine;
+    RailsBlueprint rails;
     Drill drill;
     public Storage storage;
 
     List<Harvester> harvester = new ArrayList<>();
     List<Deployer> deployer = new ArrayList<>();
-    private MovingMachineEntity entity;
 
     public MovingMachine() {
     }
 
-    public MovingMachine(EngineModule engine, RailsModule rails) {
+    public MovingMachine(EngineBlueprint engine, RailsBlueprint rails) {
         this.engine = engine;
         this.rails = rails;
         this.engine.setMachine(this);
         this.rails.setMachine(this);
     }
 
-    private void addDrill(Drill drill) {
+    public void addDrill(Drill drill) {
         this.drill = drill;
         this.drill.setMachine(this);
     }
@@ -59,18 +58,18 @@ public class MovingMachine {
         IBlockState blockState = world.getBlockState(activatorPos);
         Block activatorBlock = blockState.getBlock();
 
-        if (activatorBlock.equals(EngineModule.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
-            EngineModule engine = EngineModule.detectEngineModule(world, activatorPos);
+        if (activatorBlock.equals(EngineBlueprint.getActivatorBlock()) && !world.isBlockPowered(activatorPos)) {
+            EngineBlueprint engine = EngineBlueprint.detectEngineModule(world, activatorPos);
             if (engine != null) {
                 BlockPos propellerPos = engine.propellerPos;
-                RailsModule railsModule = RailsModule.detectRailModule(world, propellerPos);
+                RailsBlueprint railsBlueprint = RailsBlueprint.detectRailModule(world, propellerPos);
 
-                if (railsModule != null) {
-                    construct = new MovingMachine(engine, railsModule);
-                    Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsModule.facing);
+                if (railsBlueprint != null) {
+                    construct = new MovingMachine(engine, railsBlueprint);
+                    Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsBlueprint.facing);
                     construct.addDrill(drill);
 
-                    Storage storage = StorageBlueprint.detectStorage(world, engine, railsModule.facing);
+                    Storage storage = StorageBlueprint.detectStorage(world, engine, railsBlueprint.facing);
                     construct.addStorage(storage);
                 }
             }
@@ -87,13 +86,16 @@ public class MovingMachine {
     public void powerOff(World world) {
         engine.powerOff(world);
         drill.powerOff(world);
-        world.removeTileEntity(this.engine.activatorPos);
-        IBlockState blockState = world.getBlockState(this.engine.activatorPos);
-        if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
-            world.setBlockState(this.engine.activatorPos, blockState.withProperty(BlockLever.POWERED, false));
-            world.markBlockForUpdate(this.engine.activatorPos);
+        TileEntity tileEntity = world.getTileEntity(this.engine.activatorPos);
+        if (tileEntity instanceof MovingMachineEntity) {
+            IBlockState blockState = world.getBlockState(this.engine.activatorPos);
+            if (blockState.getProperties().containsKey(BlockLever.POWERED)) {
+                world.setBlockState(this.engine.activatorPos, blockState.withProperty(BlockLever.POWERED, false));
+                world.markBlockForUpdate(this.engine.activatorPos);
+            }
+            world.removeTileEntity(this.engine.activatorPos);
+            tileEntity.invalidate();
         }
-        this.entity.invalidate();
 
     }
 
@@ -183,11 +185,6 @@ public class MovingMachine {
             this.drill.performOperation(world, tick);
             engine.burnFuel(world, this.drill.fuelBurn(world));
         }
-    }
-
-
-    public void setEntity(MovingMachineEntity entity) {
-        this.entity = entity;
     }
 
 }

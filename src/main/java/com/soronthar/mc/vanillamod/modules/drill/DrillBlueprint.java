@@ -1,6 +1,7 @@
 package com.soronthar.mc.vanillamod.modules.drill;
 
 import com.soronthar.mc.vanillamod.Drill;
+import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.modules.drill.SmallDrillModule;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.block.Block;

@@ -15,7 +15,6 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
 
     public MovingMachineEntity(MovingMachine movingMachine) {
         this.movingMachine = movingMachine;
-        this.movingMachine.setEntity(this);
     }
 
     @Override

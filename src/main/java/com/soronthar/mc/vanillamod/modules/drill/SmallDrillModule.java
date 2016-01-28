@@ -78,13 +78,13 @@ public class SmallDrillModule implements Drill {
         IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
         boolean added = this.machine.storage.addToStorage(world, blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
         TileEntity entity = world.getTileEntity(getCurrentDrillBlock());
-        if (entity!=null && entity instanceof IInventory) {
-            IInventory inventory= (IInventory) entity;
+        if (entity != null && entity instanceof IInventory) {
+            IInventory inventory = (IInventory) entity;
             int sizeInventory = inventory.getSizeInventory();
             for (int i = 0; i < sizeInventory; i++) {
                 ItemStack stackInSlot = inventory.removeStackFromSlot(i);
-                if (stackInSlot!=null) {
-                    added = added &&  this.machine.storage.addToStorage(world,stackInSlot);
+                if (stackInSlot != null) {
+                    added = added && this.machine.storage.addToStorage(world, stackInSlot);
                 }
             }
 
@@ -115,9 +115,9 @@ public class SmallDrillModule implements Drill {
     }
 
     @Override
-    public void move(EnumFacing facing, int step) {
-        this.drillHeadPos = MovingMachine.moveBlock(getWorld(), this.drillHeadPos, facing, step);
-        calculateDrillArea(drillHeadPos, facing);
+    public void move(int step) {
+        this.drillHeadPos = MovingMachine.moveBlock(getWorld(), this.drillHeadPos, machine.getFacing(), step);
+        calculateDrillArea(drillHeadPos, machine.getFacing());
         currentDrillCell = 0;
     }
 

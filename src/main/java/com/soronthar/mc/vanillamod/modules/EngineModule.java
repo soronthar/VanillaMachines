@@ -7,7 +7,6 @@ import net.minecraft.block.BlockFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
@@ -84,10 +83,10 @@ public class EngineModule implements Module {
     }
 
     @Override
-    public void move(EnumFacing facing, int step) {
-        this.activatorPos = MovingMachine.moveBlock(getWorld(), this.activatorPos, facing, step);
-        this.controllerPos = MovingMachine.moveBlock(getWorld(), this.controllerPos, facing, step);
-        this.propellerPos = MovingMachine.moveBlock(getWorld(), this.propellerPos, facing, step);
+    public void move(int step) {
+        this.activatorPos = MovingMachine.moveBlock(getWorld(), this.activatorPos, machine.getFacing(), step);
+        this.controllerPos = MovingMachine.moveBlock(getWorld(), this.controllerPos, machine.getFacing(), step);
+        this.propellerPos = MovingMachine.moveBlock(getWorld(), this.propellerPos, machine.getFacing(), step);
     }
 
 

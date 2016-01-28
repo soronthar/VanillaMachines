@@ -60,8 +60,12 @@ public class MovingMachine {
         return world;
     }
 
+    public EnumFacing getFacing() {
+        return this.rails.facing;
+    }
+
     public static MovingMachine detectMovingMachine(World world, BlockPos activatorPos) {
-        MovingMachine construct = null;
+        MovingMachine machine = null;
 
         if (EngineBlueprint.isActivatorBlock( world.getBlockState(activatorPos)) && !world.isBlockPowered(activatorPos)) {
             EngineModule engine = EngineBlueprint.detectEngineModule(world, activatorPos);
@@ -70,16 +74,16 @@ public class MovingMachine {
                 RailsModule railsModule = RailsBlueprint.detectRailModule(world, propellerPos);
 
                 if (railsModule != null) {
-                    construct = new MovingMachine(world,engine, railsModule);
+                    machine = new MovingMachine(world,engine, railsModule);
                     Drill drill = DrillBlueprint.detect(world, engine.controllerPos, railsModule.facing);
-                    construct.addDrill(drill);
+                    machine.addDrill(drill);
 
                     Storage storage = StorageBlueprint.detectStorage(world, engine, railsModule.facing);
-                    construct.addStorage(storage);
+                    machine.addStorage(storage);
                 }
             }
         }
-        return construct;
+        return machine;
     }
 
 
@@ -122,10 +126,10 @@ public class MovingMachine {
         EnumFacing facing = rails.facing;
         List<BlockPos> blockPosList = this.getBlockPosList();
         if (this.isValidStructure()&& this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(blockPosList.size())) {
-            drill.move(facing, step);
-            engine.move(facing, step);
-            rails.move(facing, step);
-            storage.move(facing, step);
+            drill.move(step);
+            engine.move(step);
+            rails.move(step);
+            storage.move(step);
             engine.burnFuel(blockPosList.size());
 
             return true;

@@ -8,7 +8,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -37,8 +36,8 @@ public class StorageModule implements Storage {
     }
 
     @Override
-    public void move(EnumFacing facing, int step) {
-        this.chestPos=MovingMachine.moveBlock(getWorld(), this.chestPos, facing, step);
+    public void move(int step) {
+        this.chestPos=MovingMachine.moveBlock(getWorld(), this.chestPos, machine.getFacing(), step);
     }
 
     @Override

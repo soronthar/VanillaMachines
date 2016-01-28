@@ -3,7 +3,6 @@ package com.soronthar.mc.vanillamod.modules.drill;
 import com.soronthar.mc.vanillamod.Drill;
 import com.soronthar.mc.vanillamod.MovingMachine;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -28,7 +27,7 @@ public class NopDrill implements Drill {
     }
 
     @Override
-    public void move(EnumFacing facing, int step) {
+    public void move(int step) {
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.soronthar.mc.vanillamod.Storage;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -31,7 +30,7 @@ public class EjectStorage implements Storage {
     }
 
     @Override
-    public void move(EnumFacing facing, int step) {
+    public void move(int step) {
 
     }
 

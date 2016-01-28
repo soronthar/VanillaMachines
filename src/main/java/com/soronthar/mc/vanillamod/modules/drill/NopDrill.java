@@ -28,7 +28,7 @@ public class NopDrill implements Drill {
     }
 
     @Override
-    public void move(World world, EnumFacing facing, int step) {
+    public void move(EnumFacing facing, int step) {
     }
 
     @Override

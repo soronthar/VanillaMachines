@@ -26,6 +26,9 @@ public class SmallDrillModule implements Drill {
         calculateDrillArea(drillHeadPos, facing);
     }
 
+    private World getWorld() {
+        return machine.getWorld();
+    }
 
     @Override
     public void setMachine(MovingMachine machine) {
@@ -97,7 +100,7 @@ public class SmallDrillModule implements Drill {
 
     @Override
     public boolean isValidStructure() {
-        return GeneralUtils.isBlockInPos(machine.getWorld(), this.drillHeadPos, DrillBlueprint.getDrillHeadBlock());
+        return GeneralUtils.isBlockInPos(getWorld(), this.drillHeadPos, DrillBlueprint.getDrillHeadBlock());
     }
 
     @Override
@@ -112,8 +115,8 @@ public class SmallDrillModule implements Drill {
     }
 
     @Override
-    public void move(World world, EnumFacing facing, int step) {
-        this.drillHeadPos = MovingMachine.moveBlock(world, this.drillHeadPos, facing, step);
+    public void move(EnumFacing facing, int step) {
+        this.drillHeadPos = MovingMachine.moveBlock(getWorld(), this.drillHeadPos, facing, step);
         calculateDrillArea(drillHeadPos, facing);
         currentDrillCell = 0;
     }

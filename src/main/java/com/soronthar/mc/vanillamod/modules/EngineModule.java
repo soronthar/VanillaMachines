@@ -22,13 +22,14 @@ public class EngineModule implements Module {
     public BlockPos propellerPos;
     int burnTimeLeft = 0;
 
-    public EngineModule() {
-    }
-
     EngineModule(BlockPos activatorPos, BlockPos controllerPos, BlockPos propellerPos) {
         this.activatorPos = activatorPos;
         this.controllerPos = controllerPos;
         this.propellerPos = propellerPos;
+    }
+
+    private World getWorld() {
+        return machine.getWorld();
     }
 
     public void burnFuel(int size) {
@@ -82,15 +83,11 @@ public class EngineModule implements Module {
         }
     }
 
-    private World getWorld() {
-        return machine.getWorld();
-    }
-
     @Override
-    public void move(World world, EnumFacing facing, int step) {
-        this.activatorPos = MovingMachine.moveBlock(world, this.activatorPos, facing, step);
-        this.controllerPos = MovingMachine.moveBlock(world, this.controllerPos, facing, step);
-        this.propellerPos = MovingMachine.moveBlock(world, this.propellerPos, facing, step);
+    public void move(EnumFacing facing, int step) {
+        this.activatorPos = MovingMachine.moveBlock(getWorld(), this.activatorPos, facing, step);
+        this.controllerPos = MovingMachine.moveBlock(getWorld(), this.controllerPos, facing, step);
+        this.propellerPos = MovingMachine.moveBlock(getWorld(), this.propellerPos, facing, step);
     }
 
 

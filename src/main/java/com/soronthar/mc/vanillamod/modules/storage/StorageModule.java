@@ -22,6 +22,10 @@ public class StorageModule implements Storage {
         this.chestPos=chestPos;
     }
 
+    private World getWorld() {
+        return machine.getWorld();
+    }
+
     @Override
     public void setMachine(MovingMachine machine) {
         this.machine=machine;
@@ -29,12 +33,12 @@ public class StorageModule implements Storage {
 
     @Override
     public boolean isValidStructure() {
-        return GeneralUtils.isBlockInPos(machine.getWorld(), this.chestPos, Blocks.chest);
+        return GeneralUtils.isBlockInPos(getWorld(), this.chestPos, Blocks.chest);
     }
 
     @Override
-    public void move(World world, EnumFacing facing, int step) {
-        this.chestPos=MovingMachine.moveBlock(world, this.chestPos, facing, step);
+    public void move(EnumFacing facing, int step) {
+        this.chestPos=MovingMachine.moveBlock(getWorld(), this.chestPos, facing, step);
     }
 
     @Override

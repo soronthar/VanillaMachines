@@ -20,6 +20,10 @@ public class RailsModule implements Module {
         this.facing = facing;
     }
 
+    private World getWorld() {
+        return machine.getWorld();
+    }
+
     @Override
     public void setMachine(MovingMachine machine) {
         this.machine=machine;
@@ -41,9 +45,9 @@ public class RailsModule implements Module {
     }
 
     @Override
-    public void move(World world, EnumFacing facing, int step) {
+    public void move(EnumFacing facing, int step) {
         for (int i = 0; i < rails.length; i++) {
-            rails[i] = MovingMachine.moveBlock(world, rails[i], facing, step);
+            rails[i] = MovingMachine.moveBlock(getWorld(), rails[i], facing, step);
 
         }
     }
@@ -52,7 +56,7 @@ public class RailsModule implements Module {
     public boolean isValidStructure() {
         boolean valid=true;
         for (BlockPos rail : rails) {
-            valid = valid && GeneralUtils.isBlockInPos(machine.getWorld(), rail, RailsBlueprint.getRailsBlock());
+            valid = valid && GeneralUtils.isBlockInPos(getWorld(), rail, RailsBlueprint.getRailsBlock());
         }
         return valid;
     }

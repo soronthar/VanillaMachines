@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface Module {
     boolean isValidStructure();
-
-    void move(World world, EnumFacing facing, int step);
+//TODO: move should not require the facing
+    void move(EnumFacing facing, int step);
 
     List<BlockPos> getBlockPosList();
 

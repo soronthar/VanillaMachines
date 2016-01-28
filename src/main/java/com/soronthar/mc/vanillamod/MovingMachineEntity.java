@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 //TODO: When the world is closed, the furnace keeps "burning"
 //TODO: Persist the entity..somehow.
 //TODO: the construct should have a reference to the world.
+//TODO: Turn the machine with  a stick, or using other mechanism like the sign or a block (piston)
 public class MovingMachineEntity extends TileEntity implements ITickable {
     MovingMachine movingMachine;
     int tick;

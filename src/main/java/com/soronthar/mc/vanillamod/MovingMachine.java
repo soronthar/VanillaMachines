@@ -7,7 +7,6 @@ import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
 import com.soronthar.mc.vanillamod.modules.RailsModule;
 import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -123,10 +122,10 @@ public class MovingMachine {
         EnumFacing facing = rails.facing;
         List<BlockPos> blockPosList = this.getBlockPosList();
         if (this.isValidStructure()&& this.canMove(world, facing, step, blockPosList) && engine.hasFuelFor(blockPosList.size())) {
-            drill.move(world, facing, step);
-            engine.move(world, facing, step);
-            rails.move(world, facing, step);
-            storage.move(world, facing, step);
+            drill.move(facing, step);
+            engine.move(facing, step);
+            rails.move(facing, step);
+            storage.move(facing, step);
             engine.burnFuel(blockPosList.size());
 
             return true;

@@ -3,8 +3,6 @@ package com.soronthar.mc.vanillamod.modules;
 import com.soronthar.mc.vanillamod.Module;
 import com.soronthar.mc.vanillamod.MovingMachine;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -16,13 +14,6 @@ public class RailsModule implements Module {
     private MovingMachine machine;
     private BlockPos[] rails;
     public EnumFacing facing;
-
-    public static Block getRailsBlock() {
-        return Blocks.planks;
-    }
-
-    public RailsModule() {
-    }
 
     RailsModule(BlockPos[] rails, EnumFacing facing) {
         this.rails = rails;
@@ -49,7 +40,6 @@ public class RailsModule implements Module {
         return canMove;
     }
 
-
     @Override
     public void move(World world, EnumFacing facing, int step) {
         for (int i = 0; i < rails.length; i++) {
@@ -62,7 +52,7 @@ public class RailsModule implements Module {
     public boolean isValidStructure() {
         boolean valid=true;
         for (BlockPos rail : rails) {
-            valid = valid && GeneralUtils.isBlockInPos(machine.getWorld(), rail, getRailsBlock());
+            valid = valid && GeneralUtils.isBlockInPos(machine.getWorld(), rail, RailsBlueprint.getRailsBlock());
         }
         return valid;
     }

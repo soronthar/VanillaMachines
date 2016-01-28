@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = VanillaMod.MODID, version = VanillaMod.VERSION)
+@Mod(modid = VanillaMod.MODID, version = VanillaMod.VERSION, acceptedMinecraftVersions = "1.8.9", acceptableRemoteVersions="*" )
 public class VanillaMod {
     public static final String MODID = "vanillamod";
     public static final String VERSION = "0.1";

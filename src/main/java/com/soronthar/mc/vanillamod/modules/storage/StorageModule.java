@@ -37,7 +37,7 @@ public class StorageModule implements Storage {
 
     @Override
     public void move(int step) {
-        this.chestPos=MovingMachine.moveBlock(getWorld(), this.chestPos, machine.getFacing(), step);
+        this.chestPos= GeneralUtils.moveBlock(getWorld(), this.chestPos, machine.getFacing(), step);
     }
 
     @Override

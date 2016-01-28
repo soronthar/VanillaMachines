@@ -35,13 +35,13 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
                         movingMachine.engine.powerOn();
                 }
 
-                if (!movingMachine.hasFinishedOperation(world)) {
-                    movingMachine.performOperation(world,this.tick);
+                if (!movingMachine.hasFinishedOperation()) {
+                    movingMachine.performOperation(this.tick);
                 } else {
                     move(activatorPos);
                 }
             } else {
-                movingMachine.powerOff(getWorld());
+                movingMachine.powerOff();
                 this.invalidate();
             }
         }
@@ -49,11 +49,11 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
 
     private void move(BlockPos activatorPos) {
         getWorld().removeTileEntity(activatorPos);
-        boolean isMoving = movingMachine.move(getWorld(), 1);
+        boolean isMoving = movingMachine.move(1);
         if (isMoving) {
             getWorld().setTileEntity(movingMachine.engine.activatorPos, this);
         } else {
-            movingMachine.powerOff(getWorld());
+            movingMachine.powerOff();
         }
     }
 

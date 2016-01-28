@@ -84,9 +84,9 @@ public class EngineModule implements Module {
 
     @Override
     public void move(int step) {
-        this.activatorPos = MovingMachine.moveBlock(getWorld(), this.activatorPos, machine.getFacing(), step);
-        this.controllerPos = MovingMachine.moveBlock(getWorld(), this.controllerPos, machine.getFacing(), step);
-        this.propellerPos = MovingMachine.moveBlock(getWorld(), this.propellerPos, machine.getFacing(), step);
+        this.activatorPos = GeneralUtils.moveBlock(getWorld(), this.activatorPos, machine.getFacing(), step);
+        this.controllerPos = GeneralUtils.moveBlock(getWorld(), this.controllerPos, machine.getFacing(), step);
+        this.propellerPos = GeneralUtils.moveBlock(getWorld(), this.propellerPos, machine.getFacing(), step);
     }
 
 

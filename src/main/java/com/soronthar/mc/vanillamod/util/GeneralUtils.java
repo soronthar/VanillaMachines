@@ -4,12 +4,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockMushroom;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
@@ -95,5 +98,46 @@ public class GeneralUtils {
             GeneralUtils.eject(itemStack, world, pos);
         }
 
+    }
+
+    public static BlockPos moveBlock(World world, BlockPos pos, EnumFacing facing, int step) {
+        BlockPos newPos = pos.offset(facing, step);
+        IBlockState state = world.getBlockState(pos);
+        TileEntity tileEntity = world.getTileEntity(pos);
+        ItemStack[] stackInSlot = null;
+        if (tileEntity != null && tileEntity instanceof IInventory) {
+            world.removeTileEntity(pos);
+            IInventory inventory = (IInventory) tileEntity;
+            stackInSlot = new ItemStack[inventory.getSizeInventory()];
+            for (int i = 0; i < stackInSlot.length; i++) {
+                stackInSlot[i] = inventory.getStackInSlot(i);
+            }
+        }
+        doWeirdLeverFix(world, newPos, state);
+
+        world.setBlockToAir(pos);
+        world.setBlockState(newPos, state);
+
+        if (stackInSlot != null) {
+            IInventory entity = (IInventory) world.getTileEntity(newPos);
+            for (int i = 0; i < stackInSlot.length; i++) {
+                entity.setInventorySlotContents(i, stackInSlot[i]);
+            }
+        }
+
+        return newPos;
+    }
+
+    /**
+     * If the lever is placed above grass, it will be destroyed as soon as it is placed.
+     * Prevent this by setting the space to air if possible.
+     */
+    public static void doWeirdLeverFix(World world, BlockPos pos, IBlockState state) {
+        if (state.getBlock().equals(Blocks.lever)
+                && !isBlockInPos(world, pos.offset(EnumFacing.DOWN), Blocks.air)
+                && canBlockBeReplaced(world, pos.offset(EnumFacing.DOWN))) {
+            world.setBlockToAir(pos.offset(EnumFacing.DOWN));
+            world.setBlockToAir(pos);
+        }
     }
 }

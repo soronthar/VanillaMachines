@@ -47,7 +47,7 @@ public class RailsModule implements Module {
     @Override
     public void move(int step) {
         for (int i = 0; i < rails.length; i++) {
-            rails[i] = MovingMachine.moveBlock(getWorld(), rails[i], facing, step);
+            rails[i] = GeneralUtils.moveBlock(getWorld(), rails[i], facing, step);
 
         }
     }

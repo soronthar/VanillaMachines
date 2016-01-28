@@ -64,19 +64,19 @@ public class SmallDrillModule implements Drill {
         }
 
         if (this.currentDrillCell < this.drillArea.length) {
-            boolean added = drill(getWorld());
+            boolean added = drill();
             if (!added) {
-                machine.powerOff(getWorld());
+                machine.powerOff();
             }
         } else {
             this.currentDrillCell = 0;
         }
     }
 
-    private boolean drill(World world) {
-        IBlockState blockState = world.getBlockState(getCurrentDrillBlock());
-        boolean added = this.machine.storage.addToStorage(blockState.getBlock().getDrops(world, getCurrentDrillBlock(), blockState, 0));
-        TileEntity entity = world.getTileEntity(getCurrentDrillBlock());
+    private boolean drill() {
+        IBlockState blockState = getWorld().getBlockState(getCurrentDrillBlock());
+        boolean added = this.machine.storage.addToStorage(blockState.getBlock().getDrops(getWorld(), getCurrentDrillBlock(), blockState, 0));
+        TileEntity entity = getWorld().getTileEntity(getCurrentDrillBlock());
         if (entity != null && entity instanceof IInventory) {
             IInventory inventory = (IInventory) entity;
             int sizeInventory = inventory.getSizeInventory();
@@ -88,7 +88,7 @@ public class SmallDrillModule implements Drill {
             }
 
         }
-        world.destroyBlock(getCurrentDrillBlock(), false);
+        getWorld().destroyBlock(getCurrentDrillBlock(), false);
         return added;
     }
 
@@ -115,7 +115,7 @@ public class SmallDrillModule implements Drill {
 
     @Override
     public void move(int step) {
-        this.drillHeadPos = MovingMachine.moveBlock(getWorld(), this.drillHeadPos, machine.getFacing(), step);
+        this.drillHeadPos = GeneralUtils.moveBlock(getWorld(), this.drillHeadPos, machine.getFacing(), step);
         calculateDrillArea(drillHeadPos, machine.getFacing());
         currentDrillCell = 0;
     }

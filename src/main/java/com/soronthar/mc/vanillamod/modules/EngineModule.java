@@ -2,17 +2,22 @@ package com.soronthar.mc.vanillamod.modules;
 
 import com.soronthar.mc.vanillamod.Module;
 import com.soronthar.mc.vanillamod.MovingMachine;
+import com.soronthar.mc.vanillamod.VanillaMod;
 import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import com.soronthar.mc.vanillamod.util.LogHelper;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class EngineModule implements Module {
+
     private MovingMachine machine;
 
     public BlockPos activatorPos;
@@ -44,7 +49,7 @@ public class EngineModule implements Module {
         }
 
         burnTimeLeft -= size;
-        System.out.println("burnTimeLeft = " + burnTimeLeft);
+        LogHelper.debug("burnTimeLeft = " + burnTimeLeft);
     }
 
     @Override

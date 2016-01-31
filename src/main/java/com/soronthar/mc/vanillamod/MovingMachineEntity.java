@@ -1,9 +1,12 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.util.LogHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 //TODO: chunk borders... stop if chunk is not loaded.
 //TODO: When the world is closed, the furnace keeps "burning"
@@ -19,7 +22,7 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
     public MovingMachineEntity(MovingMachine movingMachine) {
         this.movingMachine = movingMachine;
         instanceCount++;
-        System.out.println("Creating " + this + ". Instance Count: " + instanceCount);
+        LogHelper.debug("Creating " + this + ". Instance Count: " + instanceCount);
 
     }
 
@@ -68,7 +71,7 @@ public class MovingMachineEntity extends TileEntity implements ITickable {
     protected void finalize() throws Throwable {
         super.finalize();
         instanceCount--;
-        System.out.println("Collecting " + this + ". Instance Count: " + instanceCount);
+        LogHelper.debug("Collecting " + this + ". Instance Count: " + instanceCount);
     }
 
 

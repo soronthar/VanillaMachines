@@ -19,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 public class VanillaMod {
     public static final String MODID = "vanillamod";
     public static final String VERSION = "0.1";
-    public static final Logger log = LogManager.getFormatterLogger(MODID);
 
 
     @Mod.Instance(MODID)

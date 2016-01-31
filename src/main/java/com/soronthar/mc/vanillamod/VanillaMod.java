@@ -1,5 +1,6 @@
 package com.soronthar.mc.vanillamod;
 
+import com.soronthar.mc.vanillamod.commands.SpawnBigDrillerCommand;
 import com.soronthar.mc.vanillamod.commands.SpawnSmallDrillerCommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
@@ -14,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+//TODO: remove the validation by using onBlockDestroyed or something
 @Mod(modid = VanillaMod.MODID, version = VanillaMod.VERSION, acceptedMinecraftVersions = "1.8.9", acceptableRemoteVersions="*" )
 public class VanillaMod {
     public static final String MODID = "vanillamod";
@@ -40,6 +41,7 @@ public class VanillaMod {
     @Mod.EventHandler
     public void serverLoad(FMLServerStartingEvent event) {
         event.registerServerCommand(new SpawnSmallDrillerCommand());
+        event.registerServerCommand(new SpawnBigDrillerCommand());
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = false)

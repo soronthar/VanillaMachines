@@ -69,7 +69,6 @@ public class SpawnBigDrillerCommand implements ICommand{
 
             for (Map.Entry<BlockPos, Block> entry : bigDrillBlocks.entrySet()) {
                 world.setBlockState(entry.getKey(), entry.getValue().getDefaultState());
-
             }
 
             if (buildTest) {

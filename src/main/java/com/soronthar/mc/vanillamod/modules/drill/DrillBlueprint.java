@@ -32,7 +32,7 @@ public class DrillBlueprint {
                 if (isValid) {
                     LogHelper.debug("Big Drill Detected!");
                 }
-                return NopDrill.instance;
+                return new BigDrillModule(drillHeadPos,facing);
             }
         } else {
             return NopDrill.instance;

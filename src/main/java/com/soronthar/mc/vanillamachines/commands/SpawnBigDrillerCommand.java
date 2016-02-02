@@ -1,8 +1,8 @@
-package com.soronthar.mc.vanillamod.commands;
+package com.soronthar.mc.vanillamachines.commands;
 
-import com.soronthar.mc.vanillamod.modules.EngineBlueprint;
-import com.soronthar.mc.vanillamod.modules.RailsBlueprint;
-import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
+import com.soronthar.mc.vanillamachines.modules.EngineBlueprint;
+import com.soronthar.mc.vanillamachines.modules.RailsBlueprint;
+import com.soronthar.mc.vanillamachines.modules.drill.DrillBlueprint;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLever;
 import net.minecraft.command.CommandException;
@@ -17,11 +17,11 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-public class SpawnSmallDrillerCommand implements ICommand{
+public class SpawnBigDrillerCommand implements ICommand{
     @Override
     public boolean isUsernameIndex(String[] args, int index) {
         return false;
@@ -64,7 +64,11 @@ public class SpawnSmallDrillerCommand implements ICommand{
             world.setBlockState(propellerPos.offset(facingLeft), RailsBlueprint.getRailsBlock().getDefaultState());
             world.setBlockState(propellerPos.offset(facingLeft).offset(facingOpposite), RailsBlueprint.getRailsBlock().getDefaultState());
 
-            world.setBlockState(controllerPos.offset(facing), DrillBlueprint.getDrillHeadBlock().getDefaultState());
+            Map<BlockPos, Block> bigDrillBlocks = DrillBlueprint.calculateBlockPosForDrill(controllerPos.offset(facing), facing);
+
+            for (Map.Entry<BlockPos, Block> entry : bigDrillBlocks.entrySet()) {
+                world.setBlockState(entry.getKey(), entry.getValue().getDefaultState());
+            }
 
             if (buildTest) {
                 BlockPos testAnchor=propellerPos.offset(facing,3).up();
@@ -115,17 +119,17 @@ public class SpawnSmallDrillerCommand implements ICommand{
 
     @Override
     public List<String> getCommandAliases() {
-        return Collections.singletonList("ssd");
+        return Collections.singletonList("sbd");
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "spawnSDrill [test]";
+        return "spawnBDrill [test]";
     }
 
     @Override
     public String getCommandName() {
-        return "spawnSDrill";
+        return "spawnBDrill";
     }
 
     @Override

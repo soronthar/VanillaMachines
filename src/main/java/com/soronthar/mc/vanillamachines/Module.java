@@ -1,11 +1,7 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamachines;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface Module {

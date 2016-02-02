@@ -1,6 +1,4 @@
-package com.soronthar.mc.vanillamod;
-
-import net.minecraft.world.World;
+package com.soronthar.mc.vanillamachines;
 
 public interface Powered {
     void powerOff();

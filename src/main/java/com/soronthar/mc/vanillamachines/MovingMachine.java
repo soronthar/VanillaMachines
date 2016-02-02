@@ -1,12 +1,12 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamachines;
 
-import com.soronthar.mc.vanillamod.modules.EngineBlueprint;
-import com.soronthar.mc.vanillamod.modules.EngineModule;
-import com.soronthar.mc.vanillamod.modules.RailsBlueprint;
-import com.soronthar.mc.vanillamod.modules.drill.DrillBlueprint;
-import com.soronthar.mc.vanillamod.modules.RailsModule;
-import com.soronthar.mc.vanillamod.modules.storage.StorageBlueprint;
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import com.soronthar.mc.vanillamachines.modules.EngineBlueprint;
+import com.soronthar.mc.vanillamachines.modules.EngineModule;
+import com.soronthar.mc.vanillamachines.modules.RailsBlueprint;
+import com.soronthar.mc.vanillamachines.modules.drill.DrillBlueprint;
+import com.soronthar.mc.vanillamachines.modules.RailsModule;
+import com.soronthar.mc.vanillamachines.modules.storage.StorageBlueprint;
+import com.soronthar.mc.vanillamachines.util.GeneralUtils;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
@@ -24,8 +24,8 @@ public class MovingMachine {
     Drill drill;
     public Storage storage;
 
-    List<Harvester> harvester = new ArrayList<>();
-    List<Deployer> deployer = new ArrayList<>();
+    List<Harvester> harvester = new ArrayList<Harvester>();
+    List<Deployer> deployer = new ArrayList<Deployer>();
 
     public MovingMachine() {
     }

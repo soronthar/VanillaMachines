@@ -1,7 +1,7 @@
-package com.soronthar.mc.vanillamod.modules.storage;
+package com.soronthar.mc.vanillamachines.modules.storage;
 
-import com.soronthar.mc.vanillamod.modules.EngineModule;
-import com.soronthar.mc.vanillamod.Storage;
+import com.soronthar.mc.vanillamachines.modules.EngineModule;
+import com.soronthar.mc.vanillamachines.Storage;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;

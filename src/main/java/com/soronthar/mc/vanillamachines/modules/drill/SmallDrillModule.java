@@ -1,8 +1,8 @@
-package com.soronthar.mc.vanillamod.modules.drill;
+package com.soronthar.mc.vanillamachines.modules.drill;
 
-import com.soronthar.mc.vanillamod.Drill;
-import com.soronthar.mc.vanillamod.MovingMachine;
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import com.soronthar.mc.vanillamachines.Drill;
+import com.soronthar.mc.vanillamachines.MovingMachine;
+import com.soronthar.mc.vanillamachines.util.GeneralUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

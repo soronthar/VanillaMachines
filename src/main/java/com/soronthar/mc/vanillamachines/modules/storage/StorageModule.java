@@ -1,8 +1,8 @@
-package com.soronthar.mc.vanillamod.modules.storage;
+package com.soronthar.mc.vanillamachines.modules.storage;
 
-import com.soronthar.mc.vanillamod.MovingMachine;
-import com.soronthar.mc.vanillamod.Storage;
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import com.soronthar.mc.vanillamachines.MovingMachine;
+import com.soronthar.mc.vanillamachines.Storage;
+import com.soronthar.mc.vanillamachines.util.GeneralUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

@@ -1,6 +1,6 @@
-package com.soronthar.mc.vanillamod.modules;
+package com.soronthar.mc.vanillamachines.modules;
 
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import com.soronthar.mc.vanillamachines.util.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;

@@ -1,7 +1,6 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamachines;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 import java.util.List;
 

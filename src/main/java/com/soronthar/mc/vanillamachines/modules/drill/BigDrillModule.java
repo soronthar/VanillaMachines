@@ -1,7 +1,7 @@
-package com.soronthar.mc.vanillamod.modules.drill;
+package com.soronthar.mc.vanillamachines.modules.drill;
 
-import com.soronthar.mc.vanillamod.Drill;
-import com.soronthar.mc.vanillamod.MovingMachine;
+import com.soronthar.mc.vanillamachines.Drill;
+import com.soronthar.mc.vanillamachines.MovingMachine;
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -37,16 +37,17 @@ public class BigDrillModule implements Drill {
     @Override
     public void move(int step) {
         EnumFacing facing = machine.getFacing();
-        Map<BlockPos, Block> newPrint=new HashMap<>();
+        Map<BlockPos, Block> newPrint=new HashMap<BlockPos, Block>();
 
         Set<BlockPos> blockPoses = this.bluePrint.keySet();
+
 
         for (Map.Entry<BlockPos, Block> entry : this.bluePrint.entrySet()) {
             BlockPos blockPos = entry.getKey();
             BlockPos newPos = blockPos.add(facing.getDirectionVec());
             Block block = entry.getValue();
-
             this.machine.getWorld().setBlockToAir(blockPos);
+
             newPrint.put(newPos, block);
         }
 
@@ -74,6 +75,6 @@ public class BigDrillModule implements Drill {
 
     @Override
     public int fuelBurn() {
-        return 0;
+        return 5;
     }
 }

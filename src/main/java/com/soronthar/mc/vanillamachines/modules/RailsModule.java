@@ -1,8 +1,8 @@
-package com.soronthar.mc.vanillamod.modules;
+package com.soronthar.mc.vanillamachines.modules;
 
-import com.soronthar.mc.vanillamod.Module;
-import com.soronthar.mc.vanillamod.MovingMachine;
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
+import com.soronthar.mc.vanillamachines.Module;
+import com.soronthar.mc.vanillamachines.MovingMachine;
+import com.soronthar.mc.vanillamachines.util.GeneralUtils;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;

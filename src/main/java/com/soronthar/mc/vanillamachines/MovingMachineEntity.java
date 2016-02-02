@@ -1,12 +1,10 @@
-package com.soronthar.mc.vanillamod;
+package com.soronthar.mc.vanillamachines;
 
-import com.soronthar.mc.vanillamod.util.LogHelper;
+import com.soronthar.mc.vanillamachines.util.LogHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 //TODO: chunk borders... stop if chunk is not loaded.
 //TODO: When the world is closed, the furnace keeps "burning"

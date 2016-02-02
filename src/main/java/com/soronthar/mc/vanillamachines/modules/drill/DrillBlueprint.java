@@ -1,10 +1,8 @@
-package com.soronthar.mc.vanillamod.modules.drill;
+package com.soronthar.mc.vanillamachines.modules.drill;
 
-import com.soronthar.mc.vanillamod.Drill;
-import com.soronthar.mc.vanillamod.MovingMachine;
-import com.soronthar.mc.vanillamod.modules.drill.SmallDrillModule;
-import com.soronthar.mc.vanillamod.util.GeneralUtils;
-import com.soronthar.mc.vanillamod.util.LogHelper;
+import com.soronthar.mc.vanillamachines.Drill;
+import com.soronthar.mc.vanillamachines.util.GeneralUtils;
+import com.soronthar.mc.vanillamachines.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
@@ -41,7 +39,7 @@ public class DrillBlueprint {
 
     //TODO: Optimize
     public static Map<BlockPos,Block> calculateBlockPosForDrill(BlockPos anchor, EnumFacing facing) {
-        Map<BlockPos,Block> blocks=new HashMap<>();
+        Map<BlockPos,Block> blocks=new HashMap<BlockPos, Block>();
 
         BlockPos level1=anchor;
         EnumFacing left = facing.rotateYCCW();
